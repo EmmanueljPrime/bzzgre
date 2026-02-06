@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Config } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Wine } from 'lucide-react';
 
@@ -13,18 +12,24 @@ interface SetupFormProps {
 }
 
 export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
-  const [numberOfPeople, setNumberOfPeople] = useState(initialConfig?.numberOfPeople || 5);
-  const [drinksPerPerson, setDrinksPerPerson] = useState(initialConfig?.drinksPerPerson || 5);
+  const [numberOfPeople, setNumberOfPeople] = useState<string>(
+    initialConfig?.numberOfPeople?.toString() || '5'
+  );
+  const [drinksPerPerson, setDrinksPerPerson] = useState<string>(
+    initialConfig?.drinksPerPerson?.toString() || '5'
+  );
   const [errors, setErrors] = useState<{ people?: string; drinks?: string }>({});
 
   const validate = () => {
     const newErrors: { people?: string; drinks?: string } = {};
+    const numPeople = parseInt(numberOfPeople);
+    const numDrinks = parseInt(drinksPerPerson);
 
-    if (numberOfPeople < 1 || numberOfPeople > 20) {
+    if (isNaN(numPeople) || numPeople < 1 || numPeople > 20) {
       newErrors.people = 'Le nombre de personnes doit être entre 1 et 20';
     }
 
-    if (drinksPerPerson < 1 || drinksPerPerson > 20) {
+    if (isNaN(numDrinks) || numDrinks < 1 || numDrinks > 20) {
       newErrors.drinks = 'Le nombre de boissons doit être entre 1 et 20';
     }
 
@@ -35,7 +40,10 @@ export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onSubmit({ numberOfPeople, drinksPerPerson });
+      onSubmit({
+        numberOfPeople: parseInt(numberOfPeople),
+        drinksPerPerson: parseInt(drinksPerPerson)
+      });
     }
   };
 
@@ -53,14 +61,17 @@ export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
                 <Users className="h-4 w-4" />
                 Nombre de personnes
               </label>
-              <Input
-                type="number"
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 id="numberOfPeople"
-                min="1"
-                max="20"
                 value={numberOfPeople}
-                onChange={(e) => setNumberOfPeople(parseInt(e.target.value) || 0)}
-                className={errors.people ? 'border-destructive' : ''}
+                onChange={(e) => setNumberOfPeople(e.target.value.replace(/[^0-9]/g, ''))}
+                className={`flex h-11 w-full rounded-lg border-2 bg-background px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  errors.people ? 'border-destructive' : 'border-input'
+                }`}
+                placeholder="5"
               />
               {errors.people && <p className="text-sm text-destructive">{errors.people}</p>}
             </div>
@@ -70,14 +81,17 @@ export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
                 <Wine className="h-4 w-4" />
                 Nombre de boissons par personne
               </label>
-              <Input
-                type="number"
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 id="drinksPerPerson"
-                min="1"
-                max="20"
                 value={drinksPerPerson}
-                onChange={(e) => setDrinksPerPerson(parseInt(e.target.value) || 0)}
-                className={errors.drinks ? 'border-destructive' : ''}
+                onChange={(e) => setDrinksPerPerson(e.target.value.replace(/[^0-9]/g, ''))}
+                className={`flex h-11 w-full rounded-lg border-2 bg-background px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  errors.drinks ? 'border-destructive' : 'border-input'
+                }`}
+                placeholder="5"
               />
               {errors.drinks && <p className="text-sm text-destructive">{errors.drinks}</p>}
             </div>
