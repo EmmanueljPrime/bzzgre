@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Bubbles from '@/components/Bubbles';
 
 export const metadata: Metadata = {
   title: 'BzzGre - Tirage aléatoire de boissons',
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased relative">
+        <Bubbles />
+        <div className="relative z-10">{children}</div>
+      </body>
     </html>
   );
 }

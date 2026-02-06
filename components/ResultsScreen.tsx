@@ -65,9 +65,9 @@ export default function ResultsScreen({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-accent rounded-lg p-4 min-h-[80px] flex items-center justify-center">
+                <div className="bg-gradient-to-br from-purple-950/80 to-violet-950/80 border-2 border-primary/40 rounded-lg p-4 min-h-[80px] flex items-center justify-center backdrop-blur-sm shadow-inner">
                   {participant.assignedDrink ? (
-                    <p className="text-lg font-semibold text-center text-foreground">
+                    <p className="text-lg font-semibold text-center text-foreground drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">
                       {participant.assignedDrink}
                     </p>
                   ) : (

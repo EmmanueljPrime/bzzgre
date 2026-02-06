@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --background: 250 60% 10%;
+    --foreground: 0 0% 98%;
+    --card: 250 40% 15%;
+    --card-foreground: 0 0% 98%;
+    --primary: 280 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 320 80% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 250 30% 25%;
+    --muted-foreground: 250 10% 70%;
+    --accent: 180 80% 50%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.5rem;
+    --destructive-foreground: 0 0% 100%;
+    --border: 250 30% 30%;
+    --input: 250 30% 25%;
+    --ring: 280 90% 65%;
+    --radius: 1rem;
   }
 }
 
@@ -30,7 +30,139 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, 
+      hsl(260, 70%, 15%) 0%, 
+      hsl(280, 60%, 20%) 25%,
+      hsl(250, 70%, 18%) 50%,
+      hsl(290, 65%, 22%) 75%,
+      hsl(270, 60%, 16%) 100%
+    );
+    background-attachment: fixed;
+    min-height: 100vh;
   }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-600px) translateX(calc(var(--x-movement) * 50px)) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.bubble {
+  animation: float-up linear infinite;
+  --x-movement: calc((var(--random) - 0.5) * 2);
+  box-shadow: 
+    inset 0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.bubble:nth-child(odd) {
+  --random: 0.7;
+}
+
+.bubble:nth-child(even) {
+ 
+
+/* Party effects */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.3);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.party-card {
+  background: linear-gradient(135deg, 
+    hsl(250, 40%, 15%) 0%,
+    hsl(260, 45%, 18%) 100%
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(280, 50%, 35%);
+  box-shadow: 
+    0 8px 32px rgba(168, 85, 247, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.party-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 40px rgba(168, 85, 247, 0.25),
+    0 0 30px rgba(236, 72, 153, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: hsl(280, 60%, 45%);
+}
+
+.party-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, hsl(280, 90%, 65%), hsl(320, 80%, 60%));
+  box-shadow: 
+    0 4px 15px rgba(168, 85, 247, 0.4),
+    0 0 20px rgba(236, 72, 153, 0.2);
+  transition: all 0.3s ease;
+}
+
+.party-button:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 25px rgba(168, 85, 247, 0.6),
+    0 0 30px rgba(236, 72, 153, 0.4);
+}
+
+.party-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+.neon-text {
+  text-shadow: 
+    0 0 10px rgba(168, 85, 247, 0.8),
+    0 0 20px rgba(168, 85, 247, 0.5),
+    0 0 30px rgba(236, 72, 153, 0.3);
+} --random: 0.3;
+}
+
+.bubble:nth-child(3n) {
+  --random: 0.9;
+}
+
+.bubble:nth-child(5n) {
+  --random: 0.2;
 }
