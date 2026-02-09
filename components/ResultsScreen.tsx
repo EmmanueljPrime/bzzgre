@@ -67,9 +67,19 @@ export default function ResultsScreen({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-gradient-to-br from-purple-950/80 to-violet-950/80 border-2 border-primary/40 rounded-lg p-4 min-h-[80px] flex items-center justify-center backdrop-blur-sm shadow-inner">
+                <div 
+                  className="border-2 border-primary/40 rounded-lg p-4 min-h-[80px] flex items-center justify-center backdrop-blur-sm shadow-inner transition-all"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--card) / 0.8) 0%, hsl(var(--background) / 0.9) 100%)',
+                  }}
+                >
                   {participant.assignedDrink ? (
-                    <p className="text-lg font-semibold text-center text-foreground drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">
+                    <p 
+                      className="text-lg font-semibold text-center text-foreground transition-all"
+                      style={{
+                        filter: 'drop-shadow(0 0 8px hsl(var(--primary) / 0.5))',
+                      }}
+                    >
                       {participant.assignedDrink}
                     </p>
                   ) : (
