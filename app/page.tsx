@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppState, Config, Participant, initialAppState } from '@/types';
+import { AppState, Config, Participant, initialAppState, Bar } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import Header from '@/components/Header';
 import SetupForm from '@/components/SetupForm';
 import ParticipantEntry from '@/components/ParticipantEntry';
 import ResultsScreen from '@/components/ResultsScreen';
 import EditParticipantModal from '@/components/EditParticipantModal';
+import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
   const [appState, setAppState, clearAppState, isClient] = useLocalStorage<AppState>(
@@ -41,6 +42,17 @@ export default function Home() {
       isDrawingComplete: false,
     });
     setCurrentScreen('entry');
+  };
+
+  // Changement de bar immédiat (sans soumettre le formulaire)
+  const handleBarChange = (bar: Bar | null) => {
+    setAppState({
+      ...appState,
+      config: {
+        ...appState.config,
+        selectedBar: bar,
+      },
+    });
   };
 
   // Sauvegarde d'un participant
@@ -143,6 +155,26 @@ export default function Home() {
     setTimeout(() => setCurrentScreen('entry'), 100);
   };
 
+  // Supprimer un participant
+  const handleDeleteParticipant = (participantId: number) => {
+    const updatedParticipants = appState.participants.filter((p) => p.id !== participantId);
+
+    setAppState({
+      ...appState,
+      participants: updatedParticipants,
+      config: {
+        ...appState.config,
+        numberOfPeople: Math.max(updatedParticipants.length, 0),
+      },
+      isDrawingComplete: false, // Reset le tirage car les participants ont changé
+    });
+
+    // Si plus de participants, retourner à l'écran de configuration
+    if (updatedParticipants.length === 0) {
+      setCurrentScreen('setup');
+    }
+  };
+
   // Nouvelle partie
   const handleNewGame = () => {
     clearAppState();
@@ -158,11 +190,15 @@ export default function Home() {
   }
 
   return (
-    <>
+    <ThemeProvider bar={appState.config.selectedBar}>
       <Header onReset={handleNewGame} />
 
       {currentScreen === 'setup' && (
-        <SetupForm onSubmit={handleSetupSubmit} initialConfig={appState.config} />
+        <SetupForm 
+          onSubmit={handleSetupSubmit} 
+          onBarChange={handleBarChange}
+          initialConfig={appState.config} 
+        />
       )}
 
       {currentScreen === 'entry' && (
@@ -170,6 +206,7 @@ export default function Home() {
           totalPeople={appState.config.numberOfPeople}
           drinksPerPerson={appState.config.drinksPerPerson}
           participants={appState.participants}
+          selectedBar={appState.config.selectedBar}
           onSaveParticipant={handleSaveParticipant}
           onComplete={handleEntryComplete}
         />
@@ -181,6 +218,7 @@ export default function Home() {
           onDrawDrinks={handleDrawDrinks}
           onEditParticipant={handleEditParticipant}
           onAddParticipant={handleAddParticipant}
+          onDeleteParticipant={handleDeleteParticipant}
           isDrawn={appState.isDrawingComplete}
         />
       )}
@@ -188,10 +226,11 @@ export default function Home() {
       {editingParticipantId !== null && (
         <EditParticipantModal
           participant={appState.participants.find((p) => p.id === editingParticipantId)!}
+          selectedBar={appState.config.selectedBar}
           onSave={handleSaveEditedParticipant}
           onCancel={handleCancelEdit}
         />
       )}
-    </>
+    </ThemeProvider>
   );
 }

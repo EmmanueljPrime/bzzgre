@@ -3,13 +3,14 @@
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shuffle, UserPlus, Edit, Wine } from 'lucide-react';
+import { Shuffle, UserPlus, Edit, Wine, Trash2 } from 'lucide-react';
 
 interface ResultsScreenProps {
   participants: Participant[];
   onDrawDrinks: () => void;
   onEditParticipant: (participantId: number) => void;
   onAddParticipant: () => void;
+  onDeleteParticipant: (participantId: number) => void;
   isDrawn: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function ResultsScreen({
   onDrawDrinks,
   onEditParticipant,
   onAddParticipant,
+  onDeleteParticipant,
   isDrawn,
 }: ResultsScreenProps) {
   const canDraw = participants.every((p) => p.drinks.length > 0);
@@ -77,15 +79,24 @@ export default function ResultsScreen({
                   )}
                 </div>
 
-                <Button
-                  onClick={() => onEditParticipant(participant.id)}
-                  variant="outline"
-                  className="w-full"
-                  size="sm"
-                >
-                  <Edit className="h-4 w-4" />
-                  Modifier mes boissons
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => onEditParticipant(participant.id)}
+                    variant="outline"
+                    className="flex-1"
+                    size="sm"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Modifier
+                  </Button>
+                  <Button
+                    onClick={() => onDeleteParticipant(participant.id)}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}

@@ -1,22 +1,26 @@
 'use client';
 
 import { useState } from 'react';
-import { Config } from '@/types';
+import { Config, Bar, AVAILABLE_BARS } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Wine } from 'lucide-react';
+import { Users, Wine, Store } from 'lucide-react';
 
 interface SetupFormProps {
   onSubmit: (config: Config) => void;
+  onBarChange?: (bar: Bar | null) => void;
   initialConfig?: Config;
 }
 
-export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
+export default function SetupForm({ onSubmit, onBarChange, initialConfig }: SetupFormProps) {
   const [numberOfPeople, setNumberOfPeople] = useState<string>(
     initialConfig?.numberOfPeople?.toString() || '5'
   );
   const [drinksPerPerson, setDrinksPerPerson] = useState<string>(
     initialConfig?.drinksPerPerson?.toString() || '5'
+  );
+  const [selectedBar, setSelectedBar] = useState<Bar | null>(
+    initialConfig?.selectedBar || AVAILABLE_BARS[0]
   );
   const [errors, setErrors] = useState<{ people?: string; drinks?: string }>({});
 
@@ -42,7 +46,8 @@ export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
     if (validate()) {
       onSubmit({
         numberOfPeople: parseInt(numberOfPeople),
-        drinksPerPerson: parseInt(drinksPerPerson)
+        drinksPerPerson: parseInt(drinksPerPerson),
+        selectedBar,
       });
     }
   };
@@ -94,6 +99,70 @@ export default function SetupForm({ onSubmit, initialConfig }: SetupFormProps) {
                 placeholder="5"
               />
               {errors.drinks && <p className="text-sm text-destructive">{errors.drinks}</p>}
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Store className="h-4 w-4" />
+                Sélectionner un bar
+              </label>
+              <div className="grid grid-cols-1 gap-3">
+                {AVAILABLE_BARS.map((bar) => (
+                  <button
+                    key={bar.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedBar(bar);
+                      onBarChange?.(bar);
+                    }}
+                    className={`relative overflow-hidden rounded-lg border-2 p-4 text-left transition-all hover:scale-[1.02] ${
+                      selectedBar?.id === bar.id
+                        ? 'border-primary shadow-lg shadow-primary/20'
+                        : 'border-input hover:border-primary/50'
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, hsl(${bar.theme.background}) 0%, hsl(${bar.theme.cardBg}) 100%)`,
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3
+                          className="font-bold text-lg mb-1"
+                          style={{ color: `hsl(${bar.theme.primary})` }}
+                        >
+                          {bar.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{bar.description}</p>
+                        {bar.drinks.length > 0 && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            {bar.drinks.length} boissons disponibles
+                          </p>
+                        )}
+                      </div>
+                      {selectedBar?.id === bar.id && (
+                        <div
+                          className="rounded-full p-1"
+                          style={{ backgroundColor: `hsl(${bar.theme.primary})` }}
+                        >
+                          <svg
+                            className="h-5 w-5 text-black"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={3}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <Button type="submit" className="w-full" size="lg">

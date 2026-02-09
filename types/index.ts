@@ -5,9 +5,26 @@ export type Participant = {
   assignedDrink: string | null;
 };
 
+export type BarTheme = {
+  primary: string; // Couleur principale
+  secondary: string; // Couleur secondaire
+  accent: string; // Couleur d'accent
+  background: string; // Couleur de fond
+  cardBg: string; // Couleur de fond des cartes
+};
+
+export type Bar = {
+  id: string;
+  name: string;
+  description: string;
+  theme: BarTheme;
+  drinks: string[]; // Liste des boissons disponibles
+};
+
 export type Config = {
   numberOfPeople: number;
   drinksPerPerson: number;
+  selectedBar: Bar | null;
 };
 
 export type AppState = {
@@ -21,8 +38,68 @@ export const initialAppState: AppState = {
   config: {
     numberOfPeople: 0,
     drinksPerPerson: 0,
+    selectedBar: null,
   },
   participants: [],
   isSetupComplete: false,
   isDrawingComplete: false,
 };
+
+// Bars disponibles
+export const AVAILABLE_BARS: Bar[] = [
+  {
+    id: 'fusion',
+    name: 'Fusion',
+    description: 'Bar tendance avec ambiance chaleureuse',
+    theme: {
+      primary: '45 90% 55%', // Jaune gold
+      secondary: '30 20% 20%', // Marron
+      accent: '45 100% 65%', // Jaune clair
+      background: '0 0% 8%', // Noir profond
+      cardBg: '30 15% 15%', // Marron foncé
+    },
+    drinks: [
+      'Bière Blonde',
+      'Bière Brune',
+      'IPA',
+      'Mojito',
+      'Caipirinha',
+      'Piña Colada',
+      'Margarita',
+      'Cosmopolitan',
+      'Gin Tonic',
+      'Vodka Martini',
+      'Whisky Coca',
+      'Rhum Coca',
+      'Vodka Orange',
+      'Tequila Sunrise',
+      'Sex on the Beach',
+      'Long Island',
+      'Spritz',
+      'Bloody Mary',
+      'White Russian',
+      'Cuba Libre',
+      'Vin Rouge',
+      'Vin Blanc',
+      'Rosé',
+      'Champagne',
+      'Pastis',
+      'Shot Tequila',
+      'Shot Vodka',
+      'Shot Jäger',
+    ],
+  },
+  {
+    id: 'classic',
+    name: 'Mode Classique',
+    description: 'Sans thème spécifique de bar',
+    theme: {
+      primary: '280 90% 65%', // Violet
+      secondary: '320 80% 60%', // Rose
+      accent: '180 80% 50%', // Cyan
+      background: '250 60% 10%', // Violet foncé
+      cardBg: '250 40% 15%', // Violet moyen
+    },
+    drinks: [],
+  },
+];

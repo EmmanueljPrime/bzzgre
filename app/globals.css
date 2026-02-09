@@ -166,3 +166,61 @@
 .bubble:nth-child(5n) {
   --random: 0.2;
 }
+
+/* Thème Fusion - styles spécifiques */
+[data-theme="fusion"] .glow-pulse {
+  animation: glow-pulse-fusion 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse-fusion {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.6), 0 0 40px rgba(139, 69, 19, 0.3);
+  }
+}
+
+[data-theme="fusion"] .party-card {
+  background: linear-gradient(135deg, 
+    hsl(30, 15%, 15%) 0%,
+    hsl(30, 20%, 18%) 100%
+  );
+  border: 1px solid hsl(45, 70%, 45%);
+  box-shadow: 
+    0 8px 32px rgba(255, 193, 7, 0.15),
+    inset 0 1px 0 rgba(255, 193, 7, 0.1);
+}
+
+[data-theme="fusion"] .party-card:hover {
+  border-color: hsl(45, 80%, 55%);
+  box-shadow: 
+    0 12px 40px rgba(255, 193, 7, 0.25),
+    0 0 30px rgba(255, 193, 7, 0.2),
+    inset 0 1px 0 rgba(255, 193, 7, 0.15);
+}
+
+[data-theme="fusion"] .party-button {
+  background: linear-gradient(135deg, hsl(45, 90%, 55%), hsl(30, 70%, 40%));
+  box-shadow: 
+    0 4px 15px rgba(255, 193, 7, 0.4),
+    0 0 20px rgba(139, 69, 19, 0.2);
+}
+
+[data-theme="fusion"] .party-button:hover {
+  box-shadow: 
+    0 6px 25px rgba(255, 193, 7, 0.6),
+    0 0 30px rgba(255, 193, 7, 0.4);
+}
+
+[data-theme="fusion"] .neon-text {
+  text-shadow: 
+    0 0 10px rgba(255, 193, 7, 0.8),
+    0 0 20px rgba(255, 193, 7, 0.5),
+    0 0 30px rgba(139, 69, 19, 0.3);
+}
+
+/* Thème Classic - styles par défaut (violet) */
+[data-theme="classic"] .glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
