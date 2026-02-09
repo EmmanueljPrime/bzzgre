@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Config, Bar, AVAILABLE_BARS } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -125,13 +126,26 @@ export default function SetupForm({ onSubmit, onBarChange, initialConfig }: Setu
                     }}
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <h3
-                          className="font-bold text-lg mb-1"
-                          style={{ color: `hsl(${bar.theme.primary})` }}
-                        >
-                          {bar.name}
-                        </h3>
+                      <div className="flex-1">
+                        {bar.logo ? (
+                          <div className="mb-2 h-12 relative">
+                            <Image 
+                              src={bar.logo} 
+                              alt={bar.name}
+                              width={150}
+                              height={48}
+                              className="object-contain"
+                              style={{ filter: 'brightness(0) saturate(100%) invert(1)' }}
+                            />
+                          </div>
+                        ) : (
+                          <h3
+                            className="font-bold text-lg mb-1"
+                            style={{ color: `hsl(${bar.theme.primary})` }}
+                          >
+                            {bar.name}
+                          </h3>
+                        )}
                         <p className="text-sm text-muted-foreground">{bar.description}</p>
                         {bar.drinks.length > 0 && (
                           <p className="text-xs text-muted-foreground mt-2">

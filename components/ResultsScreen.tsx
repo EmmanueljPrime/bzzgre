@@ -1,25 +1,30 @@
 'use client';
 
-import { Participant } from '@/types';
+import Image from 'next/image';
+import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shuffle, UserPlus, Edit, Wine, Trash2 } from 'lucide-react';
+import { Shuffle, UserPlus, Edit, Wine, Trash2, Store } from 'lucide-react';
 
 interface ResultsScreenProps {
   participants: Participant[];
+  selectedBar: Bar | null;
   onDrawDrinks: () => void;
   onEditParticipant: (participantId: number) => void;
   onAddParticipant: () => void;
   onDeleteParticipant: (participantId: number) => void;
+  onChangeBar: () => void;
   isDrawn: boolean;
 }
 
 export default function ResultsScreen({
   participants,
+  selectedBar,
   onDrawDrinks,
   onEditParticipant,
   onAddParticipant,
   onDeleteParticipant,
+  onChangeBar,
   isDrawn,
 }: ResultsScreenProps) {
   const canDraw = participants.every((p) => p.drinks.length > 0);
@@ -53,6 +58,33 @@ export default function ResultsScreen({
           >
             <UserPlus className="h-5 w-5" />
             Ajouter un participant
+          </Button>
+
+          <Button
+            onClick={onChangeBar}
+            variant="outline"
+            className="flex-1 md:flex-none"
+            size="lg"
+          >
+            {selectedBar?.logo ? (
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-auto relative">
+                  <Image 
+                    src={selectedBar.logo} 
+                    alt={selectedBar.name}
+                    width={80}
+                    height={24}
+                    className="object-contain"
+                    style={{ filter: 'brightness(0) saturate(100%) invert(1)' }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <>
+                <Store className="h-5 w-5" />
+                {selectedBar ? selectedBar.name : 'Changer de bar'}
+              </>
+            )}
           </Button>
         </div>
 

@@ -8,6 +8,7 @@ import SetupForm from '@/components/SetupForm';
 import ParticipantEntry from '@/components/ParticipantEntry';
 import ResultsScreen from '@/components/ResultsScreen';
 import EditParticipantModal from '@/components/EditParticipantModal';
+import BarSelectionModal from '@/components/BarSelectionModal';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
 
   const [currentScreen, setCurrentScreen] = useState<'setup' | 'entry' | 'results'>('setup');
   const [editingParticipantId, setEditingParticipantId] = useState<number | null>(null);
+  const [isBarSelectionOpen, setIsBarSelectionOpen] = useState(false);
 
   // Déterminer l'écran à afficher au chargement
   useEffect(() => {
@@ -215,10 +217,12 @@ export default function Home() {
       {currentScreen === 'results' && (
         <ResultsScreen
           participants={appState.participants}
+          selectedBar={appState.config.selectedBar}
           onDrawDrinks={handleDrawDrinks}
           onEditParticipant={handleEditParticipant}
           onAddParticipant={handleAddParticipant}
           onDeleteParticipant={handleDeleteParticipant}
+          onChangeBar={() => setIsBarSelectionOpen(true)}
           isDrawn={appState.isDrawingComplete}
         />
       )}
@@ -229,6 +233,14 @@ export default function Home() {
           selectedBar={appState.config.selectedBar}
           onSave={handleSaveEditedParticipant}
           onCancel={handleCancelEdit}
+        />
+      )}
+
+      {isBarSelectionOpen && (
+        <BarSelectionModal
+          currentBar={appState.config.selectedBar}
+          onSelectBar={handleBarChange}
+          onClose={() => setIsBarSelectionOpen(false)}
         />
       )}
     </ThemeProvider>

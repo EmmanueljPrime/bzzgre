@@ -17,6 +17,7 @@ export type Bar = {
   id: string;
   name: string;
   description: string;
+  logo?: string; // Chemin optionnel vers le logo
   theme: BarTheme;
   drinks: string[]; // Liste des boissons disponibles
 };
@@ -51,6 +52,7 @@ export const AVAILABLE_BARS: Bar[] = [
     id: 'fusion',
     name: 'Fusion',
     description: 'Bar tendance avec ambiance chaleureuse',
+    logo: '/bar_brand/fusion_logo.webp',
     theme: {
       primary: '45 90% 55%', // Jaune gold
       secondary: '30 20% 20%', // Marron
@@ -59,34 +61,16 @@ export const AVAILABLE_BARS: Bar[] = [
       cardBg: '30 15% 15%', // Marron foncé
     },
     drinks: [
-      'Bière Blonde',
-      'Bière Brune',
-      'IPA',
-      'Mojito',
-      'Caipirinha',
-      'Piña Colada',
-      'Margarita',
-      'Cosmopolitan',
+      'Pornstar Martini',
+      'Cinnamon cramberry',
+      'Le Confiance',
+      'Le Grinch',
       'Gin Tonic',
-      'Vodka Martini',
-      'Whisky Coca',
-      'Rhum Coca',
-      'Vodka Orange',
-      'Tequila Sunrise',
-      'Sex on the Beach',
-      'Long Island',
-      'Spritz',
-      'Bloody Mary',
-      'White Russian',
-      'Cuba Libre',
-      'Vin Rouge',
-      'Vin Blanc',
-      'Rosé',
-      'Champagne',
-      'Pastis',
-      'Shot Tequila',
-      'Shot Vodka',
-      'Shot Jäger',
+      'Gin Pêche',
+      'Cidre',
+      'Mazout',
+      'Perroquet',
+      'Mojito',
     ],
   },
   {
