@@ -33,11 +33,11 @@ export default function BzzgreGamesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4">
       <Card className="w-full max-w-2xl shadow-2xl">
-        <CardHeader className="space-y-4">
+        <CardHeader className="space-y-2 md:space-y-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
+            <CardTitle className="text-xl md:text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
               🍺 Jeux Bzzgre
             </CardTitle>
             <Button
@@ -48,43 +48,43 @@ export default function BzzgreGamesModal({
               <X className="h-5 w-5" />
             </Button>
           </div>
-          <CardDescription className="text-base">
+          <CardDescription className="text-sm md:text-base">
             Choisis ton jeu pour pimenter la soirée !
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3 md:space-y-4">
           {/* Mission Game Card */}
           <button
             onClick={() => setCurrentMode('mission')}
             className="w-full text-left group"
           >
             <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2 flex-1">
-                    <CardTitle className="text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
-                      <Target className="h-6 w-6" />
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 md:space-y-2 flex-1">
+                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
+                      <Target className="h-5 w-5 md:h-6 md:w-6" />
                       Mission Game
                     </CardTitle>
-                    <CardDescription className="text-sm">
+                    <CardDescription className="text-xs md:text-sm">
                       Vérités et actions osées • 55 questions par joueur
                     </CardDescription>
                   </div>
-                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-xs font-semibold">
-                    DISPONIBLE
+                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
+                    DISPO
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
                   Un jeu de vérités et d'actions qui va révéler les secrets les plus croustillants. 
                   Chaque joueur a son propre deck de 55 questions uniques. Attention, ça va chauffer ! 🔥
                 </p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
                   <span>👥 {participants.length} joueurs</span>
                   <span>•</span>
-                  <span>📝 {participants.length * 55} questions total</span>
+                  <span>📝 {participants.length * 55} questions</span>
                 </div>
               </CardContent>
             </Card>
@@ -92,11 +92,11 @@ export default function BzzgreGamesModal({
 
           {/* Upcoming Games (Locked) */}
           <Card className="border-2 border-dashed opacity-50 cursor-not-allowed">
-            <CardHeader>
+            <CardHeader className="p-3 md:p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-2 flex-1">
-                  <CardTitle className="text-xl flex items-center gap-2 text-muted-foreground">
-                    <Lock className="h-5 w-5" />
+                <div className="space-y-1 flex-1">
+                  <CardTitle className="text-base md:text-xl flex items-center gap-2 text-muted-foreground">
+                    <Lock className="h-4 w-4 md:h-5 md:w-5" />
                     Beer Pong Challenge
                   </CardTitle>
                   <CardDescription className="text-xs">
@@ -108,11 +108,11 @@ export default function BzzgreGamesModal({
           </Card>
 
           <Card className="border-2 border-dashed opacity-50 cursor-not-allowed">
-            <CardHeader>
+            <CardHeader className="p-3 md:p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-2 flex-1">
-                  <CardTitle className="text-xl flex items-center gap-2 text-muted-foreground">
-                    <Lock className="h-5 w-5" />
+                <div className="space-y-1 flex-1">
+                  <CardTitle className="text-base md:text-xl flex items-center gap-2 text-muted-foreground">
+                    <Lock className="h-4 w-4 md:h-5 md:w-5" />
                     Roi des Menteurs
                   </CardTitle>
                   <CardDescription className="text-xs">

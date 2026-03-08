@@ -95,7 +95,13 @@ export default function BzzgreMissionGame({
   onClose,
 }: BzzgreMissionGameProps) {
   const storageKey = `bzzgre_mission_game_${gameId}`;
-  const [isWarningVisible, setIsWarningVisible] = useState(true);
+  // Fermer l'avertissement par défaut sur mobile
+  const [isWarningVisible, setIsWarningVisible] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 768; // Fermé sur mobile (<768px)
+    }
+    return true;
+  });
 
   // Initialize state from localStorage or create fresh state
   const [gameState, setGameState] = useState<GameState>(() => {
@@ -213,14 +219,14 @@ export default function BzzgreMissionGame({
     getRemainingCount(gameState.currentPlayerId) === 0;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <Card className="w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
+      <Card className="w-full max-w-4xl max-h-[98vh] md:max-h-[95vh] overflow-y-auto shadow-2xl">
         {/* Header */}
-        <CardHeader className="space-y-4 border-b border-border/50 sticky top-0 bg-card z-10">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 space-y-3">
-              <CardTitle className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-yellow-500" />
+        <CardHeader className="space-y-2 md:space-y-4 border-b border-border/50 sticky top-0 bg-card z-10 py-3 md:py-6">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 space-y-2">
+              <CardTitle className="text-lg md:text-2xl lg:text-3xl font-bold flex items-center gap-2">
+                <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-yellow-500" />
                 Mission Game
               </CardTitle>
               
@@ -228,10 +234,10 @@ export default function BzzgreMissionGame({
               <div className="bg-red-500/10 border-2 border-red-500/50 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setIsWarningVisible(!isWarningVisible)}
-                  className="w-full p-3 flex items-center justify-between gap-2 hover:bg-red-500/5 transition-colors"
+                  className="w-full p-2 md:p-3 flex items-center justify-between gap-2 hover:bg-red-500/5 transition-colors"
                 >
-                  <span className="text-sm md:text-base font-semibold text-red-600 dark:text-red-400 text-left flex-1">
-                    ⚠️ Avertissement Bzzgre
+                  <span className="text-xs md:text-sm font-semibold text-red-600 dark:text-red-400 text-left flex-1">
+                    ⚠️ Avertissement
                   </span>
                   {isWarningVisible ? (
                     <ChevronUp className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" />
@@ -240,8 +246,8 @@ export default function BzzgreMissionGame({
                   )}
                 </button>
                 {isWarningVisible && (
-                  <div className="px-3 pb-3 animate-in fade-in-50 slide-in-from-top-2 duration-200">
-                    <p className="text-xs md:text-sm text-red-600 dark:text-red-400">
+                  <div className="px-2 pb-2 md:px-3 md:pb-3 animate-in fade-in-50 slide-in-from-top-2 duration-200">
+                    <p className="text-xs text-red-600 dark:text-red-400">
                       Attention, ce jeu contient différents types d'actions et de vérités. 
                       La bzzgre corporation ne peut en aucun cas être tenue responsable des engueulades, 
                       crises de jalousie, bourbiers ou possibles ruptures de contrat amical. 
@@ -264,12 +270,12 @@ export default function BzzgreMissionGame({
 
           {/* Current Player Info */}
           {gameState.currentPlayerId && (
-            <div className="bg-primary/10 border border-primary/30 rounded-lg p-3">
-              <p className="text-lg font-semibold">
-                🎯 Joueur actuel : {participants.find(p => p.id === gameState.currentPlayerId)?.name}
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-2 md:p-3">
+              <p className="text-sm md:text-lg font-semibold">
+                🎯 {participants.find(p => p.id === gameState.currentPlayerId)?.name}
               </p>
-              <p className="text-sm text-muted-foreground">
-                Questions restantes pour toi : {getRemainingCount(gameState.currentPlayerId)}/{TOTAL_QUESTIONS}
+              <p className="text-xs md:text-sm text-muted-foreground">
+                {getRemainingCount(gameState.currentPlayerId)}/{TOTAL_QUESTIONS} questions restantes
               </p>
             </div>
           )}
@@ -282,8 +288,8 @@ export default function BzzgreMissionGame({
               size="sm"
               className="flex-1"
             >
-              <RotateCcw className="h-4 w-4" />
-              Reset jeu
+              <RotateCcw className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden md:inline ml-2">Reset jeu</span>
             </Button>
             <Button
               onClick={onClose}
@@ -291,51 +297,51 @@ export default function BzzgreMissionGame({
               size="sm"
               className="flex-1"
             >
-              ← Retour au jeu principal
+              <span className="hidden md:inline">← </span>Retour
             </Button>
           </div>
         </CardHeader>
 
         {/* Main Content */}
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="p-3 md:p-6 space-y-3 md:space-y-6">
           {/* Question Display */}
-          <div className="min-h-[200px] flex items-center justify-center">
+          <div className="min-h-[120px] md:min-h-[200px] flex items-center justify-center">
             {isCurrentPlayerDone ? (
-              <div className="text-center space-y-4 p-8 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/50 rounded-lg">
-                <p className="text-4xl">🎉</p>
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  GG ! T'as fait toutes les questions sale cochon !
+              <div className="text-center space-y-2 md:space-y-4 p-4 md:p-8 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/50 rounded-lg">
+                <p className="text-3xl md:text-4xl">🎉</p>
+                <p className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">
+                  GG ! Toutes les questions !
                 </p>
-                <p className="text-muted-foreground">
-                  Sélectionne un autre joueur pour continuer
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Sélectionne un autre joueur
                 </p>
               </div>
             ) : gameState.currentQuestion ? (
               <div 
-                className="text-center space-y-4 p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/30 rounded-lg animate-in fade-in-50 duration-500"
+                className="text-center space-y-2 md:space-y-4 p-4 md:p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/30 rounded-lg animate-in fade-in-50 duration-500"
               >
-                <p className="text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed">
+                <p className="text-base md:text-xl lg:text-2xl font-semibold leading-relaxed">
                   {gameState.currentQuestion}
                 </p>
               </div>
             ) : (
-              <div className="text-center space-y-4">
-                <Sparkles className="h-16 w-16 mx-auto text-primary opacity-50" />
-                <p className="text-xl text-muted-foreground">
-                  Sélectionne un joueur pour commencer
+              <div className="text-center space-y-2 md:space-y-4">
+                <Sparkles className="h-12 w-12 md:h-16 md:w-16 mx-auto text-primary opacity-50" />
+                <p className="text-sm md:text-xl text-muted-foreground">
+                  Sélectionne un joueur
                 </p>
               </div>
             )}
           </div>
 
           {/* Player Selection Grid */}
-          <div className="space-y-4">
+          <div className="space-y-2 md:space-y-4">
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              <h3 className="text-lg font-semibold">Participants</h3>
+              <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+              <h3 className="text-sm md:text-lg font-semibold">Joueurs</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
               {participants.map((participant) => {
                 const remaining = getRemainingCount(participant.id);
                 const isCurrent = gameState.currentPlayerId === participant.id;
@@ -347,21 +353,21 @@ export default function BzzgreMissionGame({
                     onClick={() => drawQuestionForPlayer(participant.id)}
                     disabled={isDone}
                     variant={isCurrent ? 'default' : 'outline'}
-                    className="h-auto py-4 px-4 flex flex-col items-start gap-2 w-full relative overflow-hidden"
+                    className="h-auto py-2 px-2 md:py-4 md:px-4 flex flex-col items-start gap-1 md:gap-2 w-full relative overflow-hidden"
                   >
                     {isDone && (
                       <div className="absolute inset-0 bg-green-500/10 flex items-center justify-center">
-                        <span className="text-4xl">✅</span>
+                        <span className="text-2xl md:text-4xl">✅</span>
                       </div>
                     )}
-                    <span className="font-semibold text-base">{participant.name}</span>
-                    <span className="text-xs opacity-70">
-                      {remaining}/{TOTAL_QUESTIONS} questions restantes
+                    <span className="font-semibold text-xs md:text-base">{participant.name}</span>
+                    <span className="text-[10px] md:text-xs opacity-70">
+                      {remaining}/{TOTAL_QUESTIONS}
                     </span>
                     {!isDone && (
-                      <div className="w-full bg-secondary/30 rounded-full h-1.5 mt-1">
+                      <div className="w-full bg-secondary/30 rounded-full h-1 md:h-1.5">
                         <div 
-                          className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                          className="bg-primary h-1 md:h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${((TOTAL_QUESTIONS - remaining) / TOTAL_QUESTIONS) * 100}%` }}
                         />
                       </div>
@@ -372,8 +378,8 @@ export default function BzzgreMissionGame({
             </div>
           </div>
 
-          {/* Stats Summary */}
-          <div className="bg-muted/50 rounded-lg p-4 text-center">
+          {/* Stats Summary - Hidden on mobile */}
+          <div className="hidden md:block bg-muted/50 rounded-lg p-4 text-center">
             <p className="text-sm text-muted-foreground">
               Total de questions possibles : {participants.length} joueurs × {TOTAL_QUESTIONS} questions = {participants.length * TOTAL_QUESTIONS} tirages
             </p>
