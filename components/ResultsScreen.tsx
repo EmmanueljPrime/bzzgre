@@ -173,6 +173,7 @@ export default function ResultsScreen({
         <BzzgreGamesModal
           participants={participants}
           gameId={gameId}
+          selectedBar={selectedBar}
           onClose={() => setIsBzzgreModalOpen(false)}
         />
       )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Participant } from '@/types';
+import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Target, Beer, Clock } from 'lucide-react';
@@ -12,6 +12,7 @@ import BzzgreTimeUpGame from './BzzgreTimeUpGame';
 interface BzzgreGamesModalProps {
   participants: Participant[];
   gameId: string;
+  selectedBar: Bar | null;
   onClose: () => void;
 }
 
@@ -20,6 +21,7 @@ type GameMode = 'selection' | 'mission' | 'jamais' | 'timesup';
 export default function BzzgreGamesModal({
   participants,
   gameId,
+  selectedBar,
   onClose,
 }: BzzgreGamesModalProps) {
   const [currentMode, setCurrentMode] = useState<GameMode>('selection');
@@ -49,6 +51,7 @@ export default function BzzgreGamesModal({
       <BzzgreTimeUpGame
         participants={participants}
         gameId={gameId}
+        selectedBar={selectedBar}
         onClose={() => setCurrentMode('selection')}
       />
     );
@@ -164,7 +167,7 @@ export default function BzzgreGamesModal({
                       Time's Up
                     </CardTitle>
                     <CardDescription className="text-xs md:text-sm">
-                      Décris, mime et devine • 3 tours • 60s
+                      Décris, mime et devine • 3 tours • 3 listes
                     </CardDescription>
                   </div>
                   <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
@@ -174,15 +177,15 @@ export default function BzzgreGamesModal({
               </CardHeader>
               <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                 <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
-                  Le classique Time's Up revisité Bzzgre ! 3 tours : descriptions, un mot, mime. 
-                  55 mots, 60 secondes par équipe. Perdants boivent l'écart de score ! ⏱️
+                  Le classique Time's Up revisité Bzzgre ! 3 listes de 40 mots (Classiques, Séries & Films, Animation). 
+                  3 tours : descriptions (30s), un mot (30s), mime (40s). Créez vos équipes par drag & drop ! ⏱️
                 </p>
                 <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
-                  <span>👥 2 équipes</span>
+                  <span>👥 2-6 équipes</span>
                   <span>•</span>
-                  <span>⏱️ 60s chrono</span>
+                  <span>⏱️ 30s/30s/40s</span>
                   <span>•</span>
-                  <span>🎯 55 mots</span>
+                  <span>🎯 3 listes de 40 mots</span>
                 </div>
               </CardContent>
             </Card>

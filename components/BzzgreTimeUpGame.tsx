@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Participant } from '@/types';
+import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, RotateCcw, Play, Pause, Check, ChevronRight, Users, ChevronDown, ChevronUp } from 'lucide-react';
@@ -9,6 +9,7 @@ import { X, RotateCcw, Play, Pause, Check, ChevronRight, Users, ChevronDown, Che
 interface BzzgreTimeUpGameProps {
   participants: Participant[];
   gameId: string;
+  selectedBar: Bar | null;
   onClose: () => void;
 }
 
@@ -17,8 +18,8 @@ interface Mot {
   emoji: string;
 }
 
-// 40 mots Time's Up - Pop Culture uniquement
-const MOTS_TIMESUP: Mot[] = [
+// Liste 1 - Classiques Pop Culture
+const LISTE_1: Mot[] = [
   { nom: "Jack Sparrow", emoji: "🏴‍☠️" },
   { nom: "Nemo", emoji: "🐠" },
   { nom: "Les Dents de la Mer", emoji: "🦈" },
@@ -61,6 +62,100 @@ const MOTS_TIMESUP: Mot[] = [
   { nom: "Le Parrain", emoji: "🤵" },
 ];
 
+// Liste 2 - Séries & Films Récents
+const LISTE_2: Mot[] = [
+  { nom: "Squid Game", emoji: "🟥" },
+  { nom: "Wednesday", emoji: "🖤" },
+  { nom: "The Last of Us", emoji: "🍄" },
+  { nom: "Peaky Blinders", emoji: "🎩" },
+  { nom: "Narcos", emoji: "💊" },
+  { nom: "Oppenheimer", emoji: "💣" },
+  { nom: "Top Gun Maverick", emoji: "✈️" },
+  { nom: "Dune", emoji: "🏜️" },
+  { nom: "The Witcher", emoji: "🗡️" },
+  { nom: "Black Mirror", emoji: "📱" },
+  { nom: "The Boys", emoji: "💥" },
+  { nom: "Wednesday Addams", emoji: "🕷️" },
+  { nom: "Avatar 2", emoji: "🌊" },
+  { nom: "John Wick", emoji: "🔫" },
+  { nom: "Deadpool", emoji: "❤️" },
+  { nom: "La Casa de Papel", emoji: "🎭" },
+  { nom: "Vikings", emoji: "⚔️" },
+  { nom: "Money Heist", emoji: "💰" },
+  { nom: "Succession", emoji: "💼" },
+  { nom: "Euphoria", emoji: "💎" },
+  { nom: "The Crown", emoji: "👑" },
+  { nom: "Daredevil", emoji: "👊" },
+  { nom: "Lucifer", emoji: "😈" },
+  { nom: "The Mandalorian", emoji: "🛡️" },
+  { nom: "Brooklyn 99", emoji: "👮" },
+  { nom: "Black Panther", emoji: "🐆" },
+  { nom: "Doctor Strange", emoji: "🔮" },
+  { nom: "Guardians of the Galaxy", emoji: "🚀" },
+  { nom: "The Batman", emoji: "🦇" },
+  { nom: "Joker", emoji: "🃏" },
+  { nom: "Venom", emoji: "👅" },
+  { nom: "Aquaman", emoji: "🔱" },
+  { nom: "Shang-Chi", emoji: "🐲" },
+  { nom: "Loki", emoji: "💚" },
+  { nom: "WandaVision", emoji: "🔴" },
+  { nom: "Moon Knight", emoji: "🌙" },
+  { nom: "Hawkeye", emoji: "🏹" },
+  { nom: "She-Hulk", emoji: "💪" },
+  { nom: "Ant-Man", emoji: "🐜" },
+  { nom: "The Flash", emoji: "⚡" },
+];
+
+// Liste 3 - Disney, Pixar & Animation
+const LISTE_3: Mot[] = [
+  { nom: "Vaiana", emoji: "🌺" },
+  { nom: "Encanto", emoji: "🦋" },
+  { nom: "Coco", emoji: "🎸" },
+  { nom: "Soul", emoji: "🎹" },
+  { nom: "Ratatouille", emoji: "🐀" },
+  { nom: "Vice-Versa", emoji: "😊" },
+  { nom: "Toy Story", emoji: "🤠" },
+  { nom: "Monsters Inc", emoji: "👹" },
+  { nom: "Cars", emoji: "🚗" },
+  { nom: "Raiponce", emoji: "👸" },
+  { nom: "Aladdin", emoji: "🧞" },
+  { nom: "La Belle et la Bête", emoji: "🌹" },
+  { nom: "Mulan", emoji: "🗡️" },
+  { nom: "Pocahontas", emoji: "🍃" },
+  { nom: "Tarzan", emoji: "🦍" },
+  { nom: "Hercule", emoji: "💪" },
+  { nom: "La Petite Sirène", emoji: "🧜" },
+  { nom: "Le Monde de Nemo", emoji: "🐠" },
+  { nom: "Monstres et Cie", emoji: "👀" },
+  { nom: "Les Indestructibles", emoji: "🦸" },
+  { nom: "Là-haut", emoji: "🎈" },
+  { nom: "Rebelle", emoji: "🏹" },
+  { nom: "Zootopie", emoji: "🦊" },
+  { nom: "Bigfoot Junior", emoji: "👣" },
+  { nom: "Dragons", emoji: "🐉" },
+  { nom: "Kung Fu Panda", emoji: "🐼" },
+  { nom: "Madagascar", emoji: "🦁" },
+  { nom: "Shrek", emoji: "👹" },
+  { nom: "Les Trolls", emoji: "💇" },
+  { nom: "Moi Moche et Méchant", emoji: "👽" },
+  { nom: "Les Minions", emoji: "💛" },
+  { nom: "Schtroumpfs", emoji: "🔵" },
+  { nom: "Pat Patrouille", emoji: "🐶" },
+  { nom: "Peppa Pig", emoji: "🐷" },
+  { nom: "Bob l'Éponge", emoji: "🧽" },
+  { nom: "Les Simpson", emoji: "🍩" },
+  { nom: "Family Guy", emoji: "👨‍👩‍👧‍👦" },
+  { nom: "South Park", emoji: "🎿" },
+  { nom: "Futurama", emoji: "🚀" },
+  { nom: "Adventure Time", emoji: "🗡️" },
+];
+
+const LISTES_MOTS = {
+  1: LISTE_1,
+  2: LISTE_2,
+  3: LISTE_3,
+};
+
 const DUREE_TOUR_1_2 = 30; // secondes
 const DUREE_TOUR_3 = 40; // secondes
 const NOMBRE_TOURS = 3;
@@ -83,11 +178,13 @@ interface GameState {
   tourTermine: boolean;
   jeuTermine: boolean;
   etapeSelection: boolean;
+  listeSelectionnee: 1 | 2 | 3;
 }
 
 export default function BzzgreTimeUpGame({
   participants,
   gameId,
+  selectedBar,
   onClose,
 }: BzzgreTimeUpGameProps) {
   const storageKey = `bzzgre_timesup_${gameId}`;
@@ -100,6 +197,31 @@ export default function BzzgreTimeUpGame({
     }
     return true;
   });
+
+  // État pour le drag and drop
+  const [draggedPlayer, setDraggedPlayer] = useState<number | null>(null);
+
+  // Générer les styles de couleur basés sur le thème du bar
+  const getBarThemeStyles = () => {
+    if (!selectedBar?.theme) {
+      // Couleurs par défaut si pas de thème
+      return {
+        background: 'hsl(30 15% 15%)',
+        border: 'hsl(30 25% 30%)',
+        hoverBorder: 'hsl(30 35% 40%)',
+        text: 'hsl(30 85% 90%)',
+      };
+    }
+    
+    return {
+      background: `hsl(${selectedBar.theme.cardBg})`,
+      border: `hsl(${selectedBar.theme.secondary} / 0.3)`,
+      hoverBorder: `hsl(${selectedBar.theme.secondary} / 0.6)`,
+      text: `hsl(${selectedBar.theme.accent})`,
+    };
+  };
+
+  const barThemeStyles = getBarThemeStyles();
 
   // État initial
   const [gameState, setGameState] = useState<GameState>(() => {
@@ -118,6 +240,7 @@ export default function BzzgreTimeUpGame({
       tourTermine: false,
       jeuTermine: false,
       etapeSelection: true,
+      listeSelectionnee: 1,
     };
 
     if (typeof window === 'undefined') return defaultState;
@@ -137,6 +260,7 @@ export default function BzzgreTimeUpGame({
             ],
             tour: parsedState.tour || 1,
             equipeActuelleIndex: parsedState.equipeActuelle === 2 ? 1 : 0,
+            listeSelectionnee: 1,
           };
         }
         // Nouveau format
@@ -144,6 +268,7 @@ export default function BzzgreTimeUpGame({
           ...defaultState,
           ...parsedState,
           equipes: parsedState.equipes || defaultState.equipes,
+          listeSelectionnee: parsedState.listeSelectionnee || 1,
         };
       } catch (e) {
         console.error('Failed to parse saved game state:', e);
@@ -152,6 +277,9 @@ export default function BzzgreTimeUpGame({
 
     return defaultState;
   });
+
+  // Liste de mots actuelle
+  const MOTS_ACTUELS = LISTES_MOTS[gameState.listeSelectionnee];
 
   // Sauvegarder l'état
   useEffect(() => {
@@ -170,8 +298,8 @@ export default function BzzgreTimeUpGame({
 
   // Supprimer une équipe
   const supprimerEquipe = (index: number) => {
-    if (gameState.equipes.length <= 2) {
-      alert("Il faut au moins 2 équipes !");
+    if (gameState.equipes.length <= 1) {
+      alert("Il faut au moins 1 équipe !");
       return;
     }
     setGameState(prev => ({
@@ -213,11 +341,53 @@ export default function BzzgreTimeUpGame({
     }));
   };
 
+  // Retirer un joueur de toutes les équipes
+  const retirerJoueur = (joueurId: number) => {
+    setGameState(prev => ({
+      ...prev,
+      equipes: prev.equipes.map(eq => ({
+        ...eq,
+        joueurs: eq.joueurs.filter(id => id !== joueurId),
+      })),
+    }));
+  };
+
+  // Drag and Drop handlers
+  const handleDragStart = (joueurId: number) => (e: React.DragEvent) => {
+    setDraggedPlayer(joueurId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDropEquipe = (equipeIndex: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggedPlayer !== null) {
+      toggleJoueurEquipe(draggedPlayer, equipeIndex);
+      setDraggedPlayer(null);
+    }
+  };
+
+  const handleDropRetirer = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggedPlayer !== null) {
+      retirerJoueur(draggedPlayer);
+      setDraggedPlayer(null);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedPlayer(null);
+  };
+
   // Démarrer le jeu
   const demarrerJeu = () => {
-    const equipesVides = gameState.equipes.filter(eq => eq.joueurs.length === 0);
-    if (equipesVides.length > 0) {
-      alert("Toutes les équipes doivent avoir au moins 1 joueur !");
+    const equipesAvecJoueurs = gameState.equipes.filter(eq => eq.joueurs.length > 0);
+    if (equipesAvecJoueurs.length === 0) {
+      alert("Au moins une équipe doit avoir des joueurs !");
       return;
     }
     setGameState(prev => ({ ...prev, etapeSelection: false }));
@@ -281,7 +451,7 @@ export default function BzzgreTimeUpGame({
 
   // Tirer un mot
   const tirerMot = () => {
-    const motsDisponibles = MOTS_TIMESUP
+    const motsDisponibles = MOTS_ACTUELS
       .map((_, index) => index)
       .filter(index => !gameState.motsUtilisesCeTour.includes(index));
 
@@ -321,7 +491,7 @@ export default function BzzgreTimeUpGame({
         : prev.motsUtilisesCeTour;
 
       // Vérifier si tous les mots sont trouvés
-      const tousMotsTrouves = nouveauxMots.length >= MOTS_TIMESUP.length;
+      const tousMotsTrouves = nouveauxMots.length >= MOTS_ACTUELS.length;
 
       // Mettre à jour le score de l'équipe actuelle
       const nouvellesEquipes = prev.equipes.map((eq, i) => 
@@ -384,10 +554,11 @@ export default function BzzgreTimeUpGame({
 
   // Reset
   const resetJeu = () => {
-    setGameState({
+    setGameState(prev => ({
+      ...prev,
       tour: 1,
       temps: DUREE_TOUR_1_2,
-      equipes: gameState.equipes.map(eq => ({ ...eq, score: 0 })),
+      equipes: prev.equipes.map(eq => ({ ...eq, score: 0 })),
       equipeActuelleIndex: 0,
       motsUtilisesCeTour: [],
       motActuelIndex: null,
@@ -395,8 +566,8 @@ export default function BzzgreTimeUpGame({
       mancheTerminee: false,
       tourTermine: false,
       jeuTermine: false,
-      etapeSelection: false,
-    });
+      etapeSelection: true,
+    }));
   };
 
   // Mot actuel
@@ -405,7 +576,7 @@ export default function BzzgreTimeUpGame({
       return { texte: "Appuyez sur PLAY", instruction: "" };
     }
 
-    const mot = MOTS_TIMESUP[gameState.motActuelIndex];
+    const mot = MOTS_ACTUELS[gameState.motActuelIndex];
     
     switch (gameState.tour) {
       case 1:
@@ -456,16 +627,79 @@ export default function BzzgreTimeUpGame({
             </CardHeader>
 
             <CardContent className="space-y-4 p-3 md:p-6">
+              {/* Sélecteur de liste */}
+              <Card className="border-2 border-primary/50 bg-primary/5">
+                <CardContent className="p-3">
+                  <p className="text-xs font-semibold mb-2">📋 Choisis ta liste de mots :</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 1 }))}
+                      variant={gameState.listeSelectionnee === 1 ? "default" : "outline"}
+                      size="sm"
+                      className="text-xs"
+                    >
+                      Liste 1<br />Classiques
+                    </Button>
+                    <Button
+                      onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 2 }))}
+                      variant={gameState.listeSelectionnee === 2 ? "default" : "outline"}
+                      size="sm"
+                      className="text-xs"
+                    >
+                      Liste 2<br />Séries & Films
+                    </Button>
+                    <Button
+                      onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 3 }))}
+                      variant={gameState.listeSelectionnee === 3 ? "default" : "outline"}
+                      size="sm"
+                      className="text-xs"
+                    >
+                      Liste 3<br />Animation
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Liste des équipes */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {gameState.equipes.map((equipe, equipeIndex) => {
                   const couleurs = [
-                    { border: "border-blue-500", bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400", btn: "bg-blue-500 hover:bg-blue-600 text-white border-blue-500" },
-                    { border: "border-red-500", bg: "bg-red-500/10", text: "text-red-600 dark:text-red-400", btn: "bg-red-500 hover:bg-red-600 text-white border-red-500" },
-                    { border: "border-green-500", bg: "bg-green-500/10", text: "text-green-600 dark:text-green-400", btn: "bg-green-500 hover:bg-green-600 text-white border-green-500" },
-                    { border: "border-yellow-500", bg: "bg-yellow-500/10", text: "text-yellow-600 dark:text-yellow-400", btn: "bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500" },
-                    { border: "border-purple-500", bg: "bg-purple-500/10", text: "text-purple-600 dark:text-purple-400", btn: "bg-purple-500 hover:bg-purple-600 text-white border-purple-500" },
-                    { border: "border-orange-500", bg: "bg-orange-500/10", text: "text-orange-600 dark:text-orange-400", btn: "bg-orange-500 hover:bg-orange-600 text-white border-orange-500" },
+                    { 
+                      border: "border-blue-500", 
+                      bg: "bg-blue-500/10", 
+                      text: "text-blue-600 dark:text-blue-400", 
+                      hover: "hover:bg-blue-500/20"
+                    },
+                    { 
+                      border: "border-red-500", 
+                      bg: "bg-red-500/10", 
+                      text: "text-red-600 dark:text-red-400", 
+                      hover: "hover:bg-red-500/20"
+                    },
+                    { 
+                      border: "border-green-500", 
+                      bg: "bg-green-500/10", 
+                      text: "text-green-600 dark:text-green-400", 
+                      hover: "hover:bg-green-500/20"
+                    },
+                    { 
+                      border: "border-yellow-500", 
+                      bg: "bg-yellow-500/10", 
+                      text: "text-yellow-600 dark:text-yellow-400", 
+                      hover: "hover:bg-yellow-500/20"
+                    },
+                    { 
+                      border: "border-purple-500", 
+                      bg: "bg-purple-500/10", 
+                      text: "text-purple-600 dark:text-purple-400", 
+                      hover: "hover:bg-purple-500/20"
+                    },
+                    { 
+                      border: "border-orange-500", 
+                      bg: "bg-orange-500/10", 
+                      text: "text-orange-600 dark:text-orange-400", 
+                      hover: "hover:bg-orange-500/20"
+                    },
                   ];
                   const couleur = couleurs[equipeIndex % couleurs.length];
                   const joueursEquipe = participants.filter(p => equipe.joueurs.includes(p.id));
@@ -481,31 +715,57 @@ export default function BzzgreTimeUpGame({
                             className={`text-sm md:text-base font-semibold bg-transparent border-none outline-none flex-1 ${couleur.text}`}
                             placeholder="Nom de l'équipe"
                           />
-                          {gameState.equipes.length > 2 && (
+                          {gameState.equipes.length > 1 && (
                             <Button
                               onClick={() => supprimerEquipe(equipeIndex)}
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0"
+                              className="h-10 w-10 p-0 hover:bg-red-500/20 group"
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-8 w-8 text-red-500 group-hover:text-red-600 group-hover:scale-110 transition-all" />
                             </Button>
                           )}
                         </div>
                       </CardHeader>
-                      <CardContent className="p-3 pt-0 space-y-2">
+                      <CardContent
+                        className={`p-3 pt-0 space-y-2 min-h-[100px] ${couleur.bg} rounded-b-lg transition-colors ${couleur.hover}`}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDropEquipe(equipeIndex)}
+                      >
                         {joueursEquipe.length === 0 && (
-                          <p className="text-xs text-muted-foreground italic">Aucun joueur</p>
+                          <p className="text-xs text-muted-foreground italic text-center py-6">
+                            Glisse les joueurs ici 👆
+                          </p>
                         )}
                         {joueursEquipe.map(p => (
-                          <Button
+                          <div
                             key={p.id}
-                            onClick={() => toggleJoueurEquipe(p.id, equipeIndex)}
-                            size="sm"
-                            className={`w-full text-xs ${couleur.btn}`}
+                            draggable
+                            onDragStart={handleDragStart(p.id)}
+                            onDragEnd={handleDragEnd}
+                            style={{
+                              backgroundColor: barThemeStyles.background,
+                              borderColor: barThemeStyles.border,
+                              color: barThemeStyles.text,
+                            }}
+                            className={`p-2 rounded border-2 cursor-move hover:shadow-lg transition-all flex items-center justify-between ${
+                              draggedPlayer === p.id ? 'opacity-50' : ''
+                            }`}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = barThemeStyles.hoverBorder;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = barThemeStyles.border;
+                            }}
                           >
-                            {p.name} <X className="ml-1 h-3 w-3" />
-                          </Button>
+                            <span className="text-xs font-medium">👤 {p.name}</span>
+                            <button
+                              onClick={() => retirerJoueur(p.id)}
+                              className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
                         ))}
                       </CardContent>
                     </Card>
@@ -522,40 +782,57 @@ export default function BzzgreTimeUpGame({
 
               {/* Joueurs non assignés */}
               {joueursNonAssignes.length > 0 && (
-                <Card className="border-dashed">
-                  <CardContent className="p-3 space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground">Joueurs non assignés :</p>
+                <Card 
+                  className="border-2 border-dashed"
+                  style={{
+                    borderColor: barThemeStyles.hoverBorder,
+                  }}
+                >
+                  <CardContent
+                    className="p-3 space-y-2 min-h-[100px] transition-colors rounded-lg"
+                    style={{
+                      backgroundColor: `${barThemeStyles.background}20`,
+                    }}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDropRetirer}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `${barThemeStyles.background}40`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = `${barThemeStyles.background}20`;
+                    }}
+                  >
+                    <p 
+                      className="text-xs font-semibold"
+                      style={{ color: barThemeStyles.text }}
+                    >
+                      Joueurs non assignés - Glisse-les dans une équipe 👇
+                    </p>
                     <div className="space-y-2">
-                      {joueursNonAssignes.map(p => {
-                        const couleurs = [
-                          { btn: "bg-blue-500 hover:bg-blue-600 text-white" },
-                          { btn: "bg-red-500 hover:bg-red-600 text-white" },
-                          { btn: "bg-green-500 hover:bg-green-600 text-white" },
-                          { btn: "bg-yellow-500 hover:bg-yellow-600 text-white" },
-                          { btn: "bg-purple-500 hover:bg-purple-600 text-white" },
-                          { btn: "bg-orange-500 hover:bg-orange-600 text-white" },
-                        ];
-                        return (
-                          <div key={p.id} className="space-y-1">
-                            <p className="text-xs font-medium">{p.name} :</p>
-                            <div className="flex flex-wrap gap-1">
-                              {gameState.equipes.map((eq, i) => {
-                                const couleur = couleurs[i % couleurs.length];
-                                return (
-                                  <Button
-                                    key={i}
-                                    onClick={() => toggleJoueurEquipe(p.id, i)}
-                                    size="sm"
-                                    className={`text-xs ${couleur.btn}`}
-                                  >
-                                    {eq.nom}
-                                  </Button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {joueursNonAssignes.map(p => (
+                        <div
+                          key={p.id}
+                          draggable
+                          onDragStart={handleDragStart(p.id)}
+                          onDragEnd={handleDragEnd}
+                          style={{
+                            backgroundColor: barThemeStyles.background,
+                            borderColor: barThemeStyles.border,
+                            color: barThemeStyles.text,
+                          }}
+                          className={`p-2 rounded border-2 cursor-move hover:shadow-lg transition-all ${
+                            draggedPlayer === p.id ? 'opacity-50' : ''
+                          }`}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = barThemeStyles.hoverBorder;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = barThemeStyles.border;
+                          }}
+                        >
+                          <span className="text-xs font-medium">👤 {p.name}</span>
+                        </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
