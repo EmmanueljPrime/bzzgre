@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, Target, Lock } from 'lucide-react';
+import { X, Target } from 'lucide-react';
 import BzzgreMissionGame from './BzzgreMissionGame';
 
 interface BzzgreGamesModalProps {
@@ -89,39 +89,6 @@ export default function BzzgreGamesModal({
               </CardContent>
             </Card>
           </button>
-
-          {/* Upcoming Games (Locked) */}
-          <Card className="border-2 border-dashed opacity-50 cursor-not-allowed">
-            <CardHeader className="p-3 md:p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-1 flex-1">
-                  <CardTitle className="text-base md:text-xl flex items-center gap-2 text-muted-foreground">
-                    <Lock className="h-4 w-4 md:h-5 md:w-5" />
-                    Beer Pong Challenge
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Bientôt disponible...
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="border-2 border-dashed opacity-50 cursor-not-allowed">
-            <CardHeader className="p-3 md:p-6">
-              <div className="flex items-start justify-between">
-                <div className="space-y-1 flex-1">
-                  <CardTitle className="text-base md:text-xl flex items-center gap-2 text-muted-foreground">
-                    <Lock className="h-4 w-4 md:h-5 md:w-5" />
-                    Roi des Menteurs
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Bientôt disponible...
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
 
           {/* Back Button */}
           <Button
