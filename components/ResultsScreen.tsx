@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shuffle, UserPlus, Edit, Wine, Trash2, Store } from 'lucide-react';
+import { Shuffle, UserPlus, Edit, Wine, Trash2, Store, Gamepad2 } from 'lucide-react';
+import BzzgreGamesModal from './BzzgreGamesModal';
 
 interface ResultsScreenProps {
   participants: Participant[];
@@ -27,7 +29,11 @@ export default function ResultsScreen({
   onChangeBar,
   isDrawn,
 }: ResultsScreenProps) {
+  const [isBzzgreModalOpen, setIsBzzgreModalOpen] = useState(false);
   const canDraw = participants.every((p) => p.drinks.length > 0);
+
+  // Generate a unique game ID based on participant names
+  const gameId = participants.map(p => p.id).join('-');
 
   return (
     <div className="min-h-screen p-4 pt-20 pb-8 bg-gradient-to-br from-background to-muted">
@@ -48,6 +54,16 @@ export default function ResultsScreen({
           >
             <Shuffle className="h-5 w-5" />
             {isDrawn ? 'Relancer le tirage' : 'Tirer les boissons'}
+          </Button>
+
+          <Button
+            onClick={() => setIsBzzgreModalOpen(true)}
+            variant="secondary"
+            className="flex-1 md:flex-none bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 hover:opacity-90 transition-opacity text-white"
+            size="lg"
+          >
+            <Gamepad2 className="h-5 w-5" />
+            Jeux Bzzgre
           </Button>
 
           <Button
@@ -152,6 +168,15 @@ export default function ResultsScreen({
           </div>
         )}
       </div>
+
+      {/* Bzzgre Games Modal */}
+      {isBzzgreModalOpen && (
+        <BzzgreGamesModal
+          participants={participants}
+          gameId={gameId}
+          onClose={() => setIsBzzgreModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

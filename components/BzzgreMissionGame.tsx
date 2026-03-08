@@ -1,0 +1,367 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Participant } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { X, RotateCcw, Sparkles, Users } from 'lucide-react';
+
+interface BzzgreMissionGameProps {
+  participants: Participant[];
+  gameId: string;
+  onClose: () => void;
+}
+
+// Toutes les 55 questions de la Partie 2
+const MISSION_QUESTIONS = [
+  "Les trois participants à ta gauche : tu dois en tuer un, coucher avec un et en marier un. Tu n'as pas le choix. Quelle est ta décision ?",
+  "Les trois participants à ta droite : tu dois en tuer un, coucher avec un et en marier un. Tu n'as pas le choix. Quelle est ta décision ?",
+  "Un souvenir bien honteux ?",
+  "C'est le moment d'être honnête avec <PLAYER> : dis-lui un défaut ou quelque chose que tu n'oses pas lui dire. Il devra répondre « mon cœur reste ouvert » ou non, puis faire la même chose dans l'autre sens.",
+  "Si tu t'es déjà dit « c'est dommage qu'il/elle soit en couple avec mon ami(e) », c'est le moment de le dire.",
+  "Quelle était ta première impression sur <PLAYER> et que penses-tu de lui/d'elle aujourd'hui ?",
+  "Une grosse loose sexuelle ? C'est le moment d'assumer.",
+  "Ton premier crush ?",
+  "Ton pire baiser ?",
+  "Ton pire partenaire sexuel, et ton meilleur ?",
+  "Le truc que tu as toujours voulu essayer au lit, mais dont tu n'as jamais osé parler ?",
+  "Une destination de voyage seul(e), et une avec le groupe avec lequel tu joues en ce moment.",
+  "Ton premier date de rêve ?",
+  "C'est un/une 10 sur 10, mais il/elle devient très ami(e) avec tes amis, ils se voient sans toi, il/elle les invite, mais pas toi.",
+  "C'est un/une 10 sur 10, vous commencez à sortir ensemble, mais tu apprends qu'il/elle avait déjà couché avec un membre de ta famille (frère, sœur, père ou mère).",
+  "Tu as couché avec le partenaire de <PLAYER>. Trouve une bonne excuse. <PLAYER> devra valider ton excuse.",
+  "Échange ton verre avec <PLAYER>.",
+  "Aïe : cul sec, ou propose un date à une personne au hasard dans tes contacts.",
+  "Une petite pensée pour nos amis les bêtes : s'il y a un animal de compagnie, c'est le moment de lui donner une friandise ou de le sortir. Si certains joueurs sont considérés comme un chien ou une chienne, ça marche aussi.",
+  "Ton fantasme du moment ?",
+  "Vous avez plus de 12 ans, on ne va pas jouer au jeu de la bouteille… si ? OK : <PLAYER> et <PLAYER> : un petit smac ou cul sec pour les deux.",
+  "Allez, on y retourne : <PLAYER>, tu roules un péckot à <PLAYER>, sinon 3 gorgées chacun.",
+  "Allez, maintenant que tout le monde est chaud, raconte-nous ta découverte de la masturbation. Cul sec pour le premier qui rit.",
+  "Je suis sûr que quand tu étais petit(e), tu avais un crush sur un personnage de dessin animé. Annonce le tien, puis c'est au tour des autres.",
+  "Décidez d'une pièce « rendez-vous », vous comprendrez plus tard.",
+  "Tu pars 5 minutes avec <PLAYER> dans la pièce « rendez-vous ». À tout à l'heure.",
+  "Si vous avez un stylo, un feutre ou n'importe quoi pour dessiner, tu fais un tatouage à <PLAYER>, mais il/elle choisit l'endroit.",
+  "Boire et s'amuser c'est bien, mais s'hydrater c'est important : un verre d'eau pour tout le monde sauf pour <PLAYER>. Le groupe lui confectionne un shooter, essayez au moins de faire un truc bien.",
+  "Tu dois aller dans la pièce « rendez-vous » avec <PLAYER>, prendre une photo sexy de lui/d'elle et l'envoyer à <PLAYER>. Bien sûr, le modèle peut esquiver, mais ça fera 5 gorgées s'il vous plaît.",
+  "Contrôle de géographie : capitale du Pérou. Tu as gagné ? Distribue trois gorgées. Tu as perdu ? Bois-les.",
+  "Chaque participant a 4 bonbons et en donne 3 à son voisin de gauche, mais le méchant Macron prend une taxe de 1 bonbon par déplacement. Combien a chaque joueur et combien a Macron ? Tu as bon : tu distribues 3 gorgées. Tu t'es trompé : tu bois.",
+  "Tous ceux qui ont un préservatif sur eux, c'est bien, vous êtes protégés. Les autres : 5 gorgées, faudra pas vous plaindre si vous chopez la chatouille.",
+  "Ton petit point faible corporel, ta petite zone érogène ?",
+  "Tu dois choisir un costume à ton partenaire pour une nuit. Lequel ? T'inquiète, personne ne juge.",
+  "Tour de table : un défaut et une qualité de la personne à votre droite.",
+  "Tu n'as pas le choix : soit tu couches avec Éric Zemmour, soit tu l'élis aux prochaines présidentielles.",
+  "Ta première expérience qui n'était pas de ton bord habituel ?",
+  "Tous ceux qui ont déjà fait un rêve érotique avec un des participants boivent. Si vous êtes pile deux à boire, vous comptez jusqu'à trois et vous dites qui était dans votre rêve.",
+  "Désolé, tu dois avouer tes sentiments à <PLAYER>. Si la majorité t'a trouvé convaincant(e), 5 minutes dans la pièce « rendez-vous » avec ton/ta dulciné(e).",
+  "On rigole bien, non ? Si tu passes une bonne soirée, une gorgée.",
+  "Maintenant, supprime une de ces choses : les MST, la faim dans le monde, les taxes sur l'alcool, la guerre. Si tu as choisi les MST : 5 gorgées, nous savons que tu sais. Si tu as pris les taxes sur l'alcool : cul sec, je ne veux rien savoir.",
+  "Allez les problèmes : explique à <PLAYER> pourquoi son dernier couple était voué à l'échec.",
+  "Allez, plus de problème : explique à <PLAYER> pourquoi c'est voué à l'échec avec son crush actuel, et on s'en fout que tu le penses ou pas.",
+  "La dernière fois que tu t'es fait pipi dessus ?",
+  "Ton dernier vomi ?",
+  "Tu as déjà eu un trou noir ? Raconte.",
+  "Ta dernière panne ?",
+  "Ta première expérience « par les grottes de l'Asco » ?",
+  "Ton kink le plus bizarre ?",
+  "Tu peux faire en sorte que la cyprine et/ou le sperme aient le goût que tu veux : tu choisis quoi ?",
+  "Balance ton porc : à ton avis, qui est le/la plus cochon(ne) au lit ? Notre coquin ou coquine boit trois gorgées.",
+  "Vote : porte-jarretelles ou body ? La minorité boit.",
+  "Vote : sous-vêtements en dentelle sur les hommes ? La minorité boit.",
+  "Vote : faire l'amour le premier soir ? La minorité boit.",
+  "Tu préfères faire l'amour ou baiser ?",
+  "Tu préfères les doigts ou la langue ?",
+  "Tu préfères finir où / tu préfères qu'il/elle finisse où ?",
+  "Balance un dossier sur <PLAYER>. Si tu n'as rien, tu bois 5 gorgées.",
+  "Macron veut réarmer la France, pas le choix : tu dois coucher avec un/une participant(e). Répondez tous. Celui ou celle qui est choisi(e) boit 3 gorgées, sauf vous deux. Tais-toi et bois le nombre de gorgées qui n'ont pas été bues, j'espère que vous n'êtes pas trop nombreux.",
+  "Ta position préférée ?",
+  "Ton crush actuel ? S'il/elle est dans la pièce, bois et tais-toi, jeune timide."
+];
+
+const TOTAL_QUESTIONS = MISSION_QUESTIONS.length;
+
+interface PlayerQuestionsState {
+  [playerId: number]: number[]; // Array of question indexes remaining for this player
+}
+
+interface GameState {
+  currentPlayerId: number | null;
+  currentQuestion: string | null;
+  playerQuestionsLeft: PlayerQuestionsState;
+}
+
+export default function BzzgreMissionGame({
+  participants,
+  gameId,
+  onClose,
+}: BzzgreMissionGameProps) {
+  const storageKey = `bzzgre_mission_game_${gameId}`;
+
+  // Initialize state from localStorage or create fresh state
+  const [gameState, setGameState] = useState<GameState>(() => {
+    if (typeof window === 'undefined') return {
+      currentPlayerId: null,
+      currentQuestion: null,
+      playerQuestionsLeft: {},
+    };
+
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved game state:', e);
+      }
+    }
+
+    // Initialize with all questions for each player
+    const playerQuestionsLeft: PlayerQuestionsState = {};
+    participants.forEach((p) => {
+      playerQuestionsLeft[p.id] = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => i);
+    });
+
+    return {
+      currentPlayerId: null,
+      currentQuestion: null,
+      playerQuestionsLeft,
+    };
+  });
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, JSON.stringify(gameState));
+    }
+  }, [gameState, storageKey]);
+
+  // Get a random player name (excluding current player)
+  const getRandomPlayerName = (excludeId: number): string => {
+    const availablePlayers = participants.filter((p) => p.id !== excludeId);
+    if (availablePlayers.length === 0) return 'un joueur';
+    const randomPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+    return randomPlayer.name;
+  };
+
+  // Replace <PLAYER> placeholder with actual player names
+  const replacePlayerPlaceholder = (question: string, currentPlayerId: number): string => {
+    let result = question;
+    const matches = question.match(/<PLAYER>/g);
+    
+    if (matches) {
+      matches.forEach(() => {
+        const playerName = getRandomPlayerName(currentPlayerId);
+        result = result.replace('<PLAYER>', playerName);
+      });
+    }
+    
+    return result;
+  };
+
+  // Draw a random question for a specific player
+  const drawQuestionForPlayer = (playerId: number) => {
+    const availableQuestions = gameState.playerQuestionsLeft[playerId] || [];
+    
+    if (availableQuestions.length === 0) {
+      return null; // No more questions for this player
+    }
+
+    // Pick a random question index from available ones
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    const questionIndex = availableQuestions[randomIndex];
+    const rawQuestion = MISSION_QUESTIONS[questionIndex];
+    
+    // Replace placeholders
+    const processedQuestion = replacePlayerPlaceholder(rawQuestion, playerId);
+
+    // Remove this question from the player's available questions
+    const updatedQuestions = availableQuestions.filter((_, idx) => idx !== randomIndex);
+    const updatedPlayerQuestionsLeft = {
+      ...gameState.playerQuestionsLeft,
+      [playerId]: updatedQuestions,
+    };
+
+    setGameState({
+      currentPlayerId: playerId,
+      currentQuestion: processedQuestion,
+      playerQuestionsLeft: updatedPlayerQuestionsLeft,
+    });
+
+    return processedQuestion;
+  };
+
+  // Reset game for all players
+  const handleReset = () => {
+    const playerQuestionsLeft: PlayerQuestionsState = {};
+    participants.forEach((p) => {
+      playerQuestionsLeft[p.id] = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => i);
+    });
+
+    setGameState({
+      currentPlayerId: null,
+      currentQuestion: null,
+      playerQuestionsLeft,
+    });
+  };
+
+  // Get remaining questions count for a player
+  const getRemainingCount = (playerId: number): number => {
+    return gameState.playerQuestionsLeft[playerId]?.length || 0;
+  };
+
+  // Check if current player has finished all questions
+  const isCurrentPlayerDone = gameState.currentPlayerId !== null && 
+    getRemainingCount(gameState.currentPlayerId) === 0;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+      <Card className="w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl">
+        {/* Header */}
+        <CardHeader className="space-y-4 border-b border-border/50 sticky top-0 bg-card z-10">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 space-y-3">
+              <CardTitle className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                <Sparkles className="h-6 w-6 text-yellow-500" />
+                Mission Game
+              </CardTitle>
+              
+              {/* Warning Banner */}
+              <div className="bg-red-500/10 border-2 border-red-500/50 rounded-lg p-3">
+                <p className="text-sm md:text-base font-semibold text-red-600 dark:text-red-400">
+                  ⚠️ Attention, ce jeu contient différents types d'actions et de vérités. 
+                  La bzzgre corporation ne peut en aucun cas être tenue responsable des engueulades, 
+                  crises de jalousie, bourbiers ou possibles ruptures de contrat amical. 
+                  Bien à vous, la direction de bzzgre.
+                </p>
+              </div>
+            </div>
+            
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          {/* Current Player Info */}
+          {gameState.currentPlayerId && (
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-3">
+              <p className="text-lg font-semibold">
+                🎯 Joueur actuel : {participants.find(p => p.id === gameState.currentPlayerId)?.name}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Questions restantes pour toi : {getRemainingCount(gameState.currentPlayerId)}/{TOTAL_QUESTIONS}
+              </p>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              size="sm"
+              className="flex-1"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset jeu
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+            >
+              ← Retour au jeu principal
+            </Button>
+          </div>
+        </CardHeader>
+
+        {/* Main Content */}
+        <CardContent className="p-6 space-y-6">
+          {/* Question Display */}
+          <div className="min-h-[200px] flex items-center justify-center">
+            {isCurrentPlayerDone ? (
+              <div className="text-center space-y-4 p-8 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/50 rounded-lg">
+                <p className="text-4xl">🎉</p>
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  GG ! T'as fait toutes les questions sale cochon !
+                </p>
+                <p className="text-muted-foreground">
+                  Sélectionne un autre joueur pour continuer
+                </p>
+              </div>
+            ) : gameState.currentQuestion ? (
+              <div 
+                className="text-center space-y-4 p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/30 rounded-lg animate-in fade-in-50 duration-500"
+              >
+                <p className="text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed">
+                  {gameState.currentQuestion}
+                </p>
+              </div>
+            ) : (
+              <div className="text-center space-y-4">
+                <Sparkles className="h-16 w-16 mx-auto text-primary opacity-50" />
+                <p className="text-xl text-muted-foreground">
+                  Sélectionne un joueur pour commencer
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Player Selection Grid */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">Participants</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {participants.map((participant) => {
+                const remaining = getRemainingCount(participant.id);
+                const isCurrent = gameState.currentPlayerId === participant.id;
+                const isDone = remaining === 0;
+
+                return (
+                  <Button
+                    key={participant.id}
+                    onClick={() => drawQuestionForPlayer(participant.id)}
+                    disabled={isDone}
+                    variant={isCurrent ? 'default' : 'outline'}
+                    className="h-auto py-4 px-4 flex flex-col items-start gap-2 w-full relative overflow-hidden"
+                  >
+                    {isDone && (
+                      <div className="absolute inset-0 bg-green-500/10 flex items-center justify-center">
+                        <span className="text-4xl">✅</span>
+                      </div>
+                    )}
+                    <span className="font-semibold text-base">{participant.name}</span>
+                    <span className="text-xs opacity-70">
+                      {remaining}/{TOTAL_QUESTIONS} questions restantes
+                    </span>
+                    {!isDone && (
+                      <div className="w-full bg-secondary/30 rounded-full h-1.5 mt-1">
+                        <div 
+                          className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${((TOTAL_QUESTIONS - remaining) / TOTAL_QUESTIONS) * 100}%` }}
+                        />
+                      </div>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Stats Summary */}
+          <div className="bg-muted/50 rounded-lg p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Total de questions possibles : {participants.length} joueurs × {TOTAL_QUESTIONS} questions = {participants.length * TOTAL_QUESTIONS} tirages
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
