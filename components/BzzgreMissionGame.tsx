@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, RotateCcw, Sparkles, Users } from 'lucide-react';
+import { X, RotateCcw, Sparkles, Users, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface BzzgreMissionGameProps {
   participants: Participant[];
@@ -95,6 +95,7 @@ export default function BzzgreMissionGame({
   onClose,
 }: BzzgreMissionGameProps) {
   const storageKey = `bzzgre_mission_game_${gameId}`;
+  const [isWarningVisible, setIsWarningVisible] = useState(true);
 
   // Initialize state from localStorage or create fresh state
   const [gameState, setGameState] = useState<GameState>(() => {
@@ -223,14 +224,31 @@ export default function BzzgreMissionGame({
                 Mission Game
               </CardTitle>
               
-              {/* Warning Banner */}
-              <div className="bg-red-500/10 border-2 border-red-500/50 rounded-lg p-3">
-                <p className="text-sm md:text-base font-semibold text-red-600 dark:text-red-400">
-                  ⚠️ Attention, ce jeu contient différents types d'actions et de vérités. 
-                  La bzzgre corporation ne peut en aucun cas être tenue responsable des engueulades, 
-                  crises de jalousie, bourbiers ou possibles ruptures de contrat amical. 
-                  Bien à vous, la direction de bzzgre.
-                </p>
+              {/* Warning Banner - Collapsible */}
+              <div className="bg-red-500/10 border-2 border-red-500/50 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setIsWarningVisible(!isWarningVisible)}
+                  className="w-full p-3 flex items-center justify-between gap-2 hover:bg-red-500/5 transition-colors"
+                >
+                  <span className="text-sm md:text-base font-semibold text-red-600 dark:text-red-400 text-left flex-1">
+                    ⚠️ Avertissement Bzzgre
+                  </span>
+                  {isWarningVisible ? (
+                    <ChevronUp className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" />
+                  )}
+                </button>
+                {isWarningVisible && (
+                  <div className="px-3 pb-3 animate-in fade-in-50 slide-in-from-top-2 duration-200">
+                    <p className="text-xs md:text-sm text-red-600 dark:text-red-400">
+                      Attention, ce jeu contient différents types d'actions et de vérités. 
+                      La bzzgre corporation ne peut en aucun cas être tenue responsable des engueulades, 
+                      crises de jalousie, bourbiers ou possibles ruptures de contrat amical. 
+                      Bien à vous, la direction de bzzgre.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             
