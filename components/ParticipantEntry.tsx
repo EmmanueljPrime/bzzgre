@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Participant, Bar } from '@/types';
+import { Participant, Bar, DrinkItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,6 +33,7 @@ export default function ParticipantEntry({
   );
   const [errors, setErrors] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const participantData = participants[currentIndex];
@@ -43,7 +44,13 @@ export default function ParticipantEntry({
       setName('');
       setDrinks(Array(drinksPerPerson).fill(''));
     }
-  }, [currentIndex, participants, drinksPerPerson]);
+    
+    // Initialiser la première catégorie si disponible
+    if (selectedBar?.categorizedDrinks && !activeCategory) {
+      const firstCategory = Object.keys(selectedBar.categorizedDrinks)[0];
+      setActiveCategory(firstCategory);
+    }
+  }, [currentIndex, participants, drinksPerPerson, selectedBar, activeCategory]);
 
   const validate = () => {
     const newErrors: string[] = [];
@@ -242,27 +249,122 @@ export default function ParticipantEntry({
         </Card>
 
         {/* Carte des boissons du bar */}
-        {selectedBar && selectedBar.drinks.length > 0 && (
-          <Card className="lg:col-span-1 h-fit max-h-[600px] overflow-hidden flex flex-col">
-            <CardHeader>
+        {selectedBar && (selectedBar.drinks.length > 0 || selectedBar.categorizedDrinks) && (
+          <Card className="lg:col-span-1 h-fit max-h-[700px] overflow-hidden flex flex-col">
+            <CardHeader className="pb-3">
               <CardTitle className="text-lg">Carte {selectedBar.name}</CardTitle>
               <CardDescription>Cliquez pour ajouter rapidement</CardDescription>
             </CardHeader>
-            <CardContent className="overflow-y-auto">
-              <div className="grid grid-cols-1 gap-2">
-                {selectedBar.drinks.map((drink, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => addDrinkFromBar(drink)}
-                    className="flex items-center gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
-                  >
-                    <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                    <span className="text-sm">{drink}</span>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
+            
+            {/* Affichage avec catégories (Fusion) */}
+            {selectedBar.categorizedDrinks ? (
+              <>
+                {/* Onglets des catégories */}
+                <div className="px-6 pb-3 border-b overflow-x-auto">
+                  <div className="flex gap-2 min-w-max">
+                    {Object.keys(selectedBar.categorizedDrinks).map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => setActiveCategory(category)}
+                        className={`px-3 py-1.5 text-xs md:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
+                          activeCategory === category
+                            ? 'bg-primary text-primary-foreground shadow-sm'
+                            : 'bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Contenu de la catégorie active */}
+                <CardContent className="overflow-y-auto flex-1 pt-4">
+                  {activeCategory && selectedBar.categorizedDrinks[activeCategory] && (
+                    <div className="space-y-4">
+                      {/* Vérifier si c'est un array direct ou des sous-catégories */}
+                      {Array.isArray(selectedBar.categorizedDrinks[activeCategory]) ? (
+                        // Array direct de boissons
+                        <div className="grid grid-cols-1 gap-2">
+                          {(selectedBar.categorizedDrinks[activeCategory] as DrinkItem[]).map((drink, index) => (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={() => addDrinkFromBar(drink.nom)}
+                              className="flex items-start gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                            >
+                              <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline justify-between gap-2">
+                                  <span className="text-sm font-medium">{drink.nom}</span>
+                                  {drink.prix && (
+                                    <span className="text-xs text-primary font-semibold whitespace-nowrap">{drink.prix}</span>
+                                  )}
+                                </div>
+                                {drink.descriptif && (
+                                  <p className="text-xs text-muted-foreground mt-0.5">{drink.descriptif}</p>
+                                )}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        // Sous-catégories
+                        Object.entries(selectedBar.categorizedDrinks[activeCategory] as Record<string, DrinkItem[]>).map(
+                          ([subCategory, items]) => (
+                            <div key={subCategory}>
+                              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                {subCategory}
+                              </h4>
+                              <div className="grid grid-cols-1 gap-2">
+                                {items.map((drink, index) => (
+                                  <button
+                                    key={index}
+                                    type="button"
+                                    onClick={() => addDrinkFromBar(drink.nom)}
+                                    className="flex items-start gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                                  >
+                                    <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-baseline justify-between gap-2">
+                                        <span className="text-sm font-medium">{drink.nom}</span>
+                                        {drink.prix && (
+                                          <span className="text-xs text-primary font-semibold whitespace-nowrap">{drink.prix}</span>
+                                        )}
+                                      </div>
+                                      {drink.descriptif && (
+                                        <p className="text-xs text-muted-foreground mt-0.5">{drink.descriptif}</p>
+                                      )}
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        )
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </>
+            ) : (
+              // Affichage simple (Mode classique)
+              <CardContent className="overflow-y-auto">
+                <div className="grid grid-cols-1 gap-2">
+                  {selectedBar.drinks.map((drink, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => addDrinkFromBar(drink)}
+                      className="flex items-center gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                    >
+                      <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                      <span className="text-sm">{drink}</span>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            )}
           </Card>
         )}
       </div>
