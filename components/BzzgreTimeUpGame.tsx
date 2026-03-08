@@ -607,36 +607,36 @@ export default function BzzgreTimeUpGame({
     const joueursNonAssignes = participants.filter(p => !joueursAssignes.has(p.id));
 
     return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
-        <div className="w-full max-w-4xl my-4">
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-1 md:p-4 overflow-y-auto">
+        <div className="w-full max-w-4xl my-2 md:my-4">
           <Card className="shadow-2xl">
-            <CardHeader className="space-y-2 p-3 md:p-6">
-              <div className="flex items-start justify-between gap-2">
+            <CardHeader className="space-y-1 md:space-y-2 p-2 md:p-6">
+              <div className="flex items-start justify-between gap-1 md:gap-2">
                 <div className="flex-1">
-                  <CardTitle className="text-lg md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
+                  <CardTitle className="text-base md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
                     ⏱️ Constitution des Équipes
                   </CardTitle>
-                  <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                  <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5 md:mt-1">
                     Créez vos équipes et assignez les joueurs
                   </p>
                 </div>
-                <Button onClick={onClose} variant="ghost" size="icon">
-                  <X className="h-5 w-5" />
+                <Button onClick={onClose} variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10">
+                  <X className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-4 p-3 md:p-6">
+            <CardContent className="space-y-2 md:space-y-4 p-2 md:p-6">
               {/* Sélecteur de liste */}
               <Card className="border-2 border-primary/50 bg-primary/5">
-                <CardContent className="p-3">
-                  <p className="text-xs font-semibold mb-2">📋 Choisis ta liste de mots :</p>
-                  <div className="grid grid-cols-3 gap-2">
+                <CardContent className="p-2 md:p-3">
+                  <p className="text-[10px] md:text-xs font-semibold mb-1 md:mb-2">📋 Choisis ta liste de mots :</p>
+                  <div className="grid grid-cols-3 gap-1 md:gap-2">
                     <Button
                       onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 1 }))}
                       variant={gameState.listeSelectionnee === 1 ? "default" : "outline"}
                       size="sm"
-                      className="text-xs"
+                      className="text-[9px] md:text-xs h-auto py-1 md:py-2 leading-tight"
                     >
                       Liste 1<br />Classiques
                     </Button>
@@ -644,7 +644,7 @@ export default function BzzgreTimeUpGame({
                       onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 2 }))}
                       variant={gameState.listeSelectionnee === 2 ? "default" : "outline"}
                       size="sm"
-                      className="text-xs"
+                      className="text-[9px] md:text-xs h-auto py-1 md:py-2 leading-tight"
                     >
                       Liste 2<br />Séries & Films
                     </Button>
@@ -652,7 +652,7 @@ export default function BzzgreTimeUpGame({
                       onClick={() => setGameState(prev => ({ ...prev, listeSelectionnee: 3 }))}
                       variant={gameState.listeSelectionnee === 3 ? "default" : "outline"}
                       size="sm"
-                      className="text-xs"
+                      className="text-[9px] md:text-xs h-auto py-1 md:py-2 leading-tight"
                     >
                       Liste 3<br />Animation
                     </Button>
@@ -661,7 +661,7 @@ export default function BzzgreTimeUpGame({
               </Card>
 
               {/* Liste des équipes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                 {gameState.equipes.map((equipe, equipeIndex) => {
                   const couleurs = [
                     { 
@@ -706,13 +706,13 @@ export default function BzzgreTimeUpGame({
 
                   return (
                     <Card key={equipeIndex} className={`border-2 ${couleur.border}`}>
-                      <CardHeader className="p-3">
-                        <div className="flex items-center gap-2 justify-between">
+                      <CardHeader className="p-2 md:p-3">
+                        <div className="flex items-center gap-1 md:gap-2 justify-between">
                           <input
                             type="text"
                             value={equipe.nom}
                             onChange={(e) => renommerEquipe(equipeIndex, e.target.value)}
-                            className={`text-sm md:text-base font-semibold bg-transparent border-none outline-none flex-1 ${couleur.text}`}
+                            className={`text-xs md:text-base font-semibold bg-transparent border-none outline-none flex-1 ${couleur.text}`}
                             placeholder="Nom de l'équipe"
                           />
                           {gameState.equipes.length > 1 && (
@@ -720,20 +720,20 @@ export default function BzzgreTimeUpGame({
                               onClick={() => supprimerEquipe(equipeIndex)}
                               variant="ghost"
                               size="sm"
-                              className="h-10 w-10 p-0 hover:bg-red-500/20 group"
+                              className="h-7 w-7 md:h-10 md:w-10 p-0 hover:bg-red-500/20 group"
                             >
-                              <X className="h-8 w-8 text-red-500 group-hover:text-red-600 group-hover:scale-110 transition-all" />
+                              <X className="h-5 w-5 md:h-8 md:w-8 text-red-500 group-hover:text-red-600 group-hover:scale-110 transition-all" />
                             </Button>
                           )}
                         </div>
                       </CardHeader>
                       <CardContent
-                        className={`p-3 pt-0 space-y-2 min-h-[100px] ${couleur.bg} rounded-b-lg transition-colors ${couleur.hover}`}
+                        className={`p-2 md:p-3 pt-0 space-y-1 md:space-y-2 min-h-[60px] md:min-h-[100px] ${couleur.bg} rounded-b-lg transition-colors ${couleur.hover}`}
                         onDragOver={handleDragOver}
                         onDrop={handleDropEquipe(equipeIndex)}
                       >
                         {joueursEquipe.length === 0 && (
-                          <p className="text-xs text-muted-foreground italic text-center py-6">
+                          <p className="text-[10px] md:text-xs text-muted-foreground italic text-center py-3 md:py-6">
                             Glisse les joueurs ici 👆
                           </p>
                         )}
@@ -748,7 +748,7 @@ export default function BzzgreTimeUpGame({
                               borderColor: barThemeStyles.border,
                               color: barThemeStyles.text,
                             }}
-                            className={`p-2 rounded border-2 cursor-move hover:shadow-lg transition-all flex items-center justify-between ${
+                            className={`p-1.5 md:p-2 rounded border-2 cursor-move hover:shadow-lg transition-all flex items-center justify-between ${
                               draggedPlayer === p.id ? 'opacity-50' : ''
                             }`}
                             onMouseEnter={(e) => {
@@ -758,12 +758,12 @@ export default function BzzgreTimeUpGame({
                               e.currentTarget.style.borderColor = barThemeStyles.border;
                             }}
                           >
-                            <span className="text-xs font-medium">👤 {p.name}</span>
+                            <span className="text-[10px] md:text-xs font-medium">👤 {p.name}</span>
                             <button
                               onClick={() => retirerJoueur(p.id)}
-                              className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1"
+                              className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-0.5 md:p-1"
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-3 w-3 md:h-4 md:w-4" />
                             </button>
                           </div>
                         ))}
@@ -775,7 +775,7 @@ export default function BzzgreTimeUpGame({
 
               {/* Ajouter équipe */}
               {gameState.equipes.length < 6 && (
-                <Button onClick={ajouterEquipe} variant="outline" className="w-full">
+                <Button onClick={ajouterEquipe} variant="outline" size="sm" className="w-full text-xs md:text-sm h-8 md:h-10">
                   + Ajouter une équipe
                 </Button>
               )}
@@ -789,7 +789,7 @@ export default function BzzgreTimeUpGame({
                   }}
                 >
                   <CardContent
-                    className="p-3 space-y-2 min-h-[100px] transition-colors rounded-lg"
+                    className="p-2 md:p-3 space-y-1 md:space-y-2 min-h-[60px] md:min-h-[100px] transition-colors rounded-lg"
                     style={{
                       backgroundColor: `${barThemeStyles.background}20`,
                     }}
@@ -803,12 +803,12 @@ export default function BzzgreTimeUpGame({
                     }}
                   >
                     <p 
-                      className="text-xs font-semibold"
+                      className="text-[10px] md:text-xs font-semibold"
                       style={{ color: barThemeStyles.text }}
                     >
                       Joueurs non assignés - Glisse-les dans une équipe 👇
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-1 md:space-y-2">
                       {joueursNonAssignes.map(p => (
                         <div
                           key={p.id}
@@ -820,7 +820,7 @@ export default function BzzgreTimeUpGame({
                             borderColor: barThemeStyles.border,
                             color: barThemeStyles.text,
                           }}
-                          className={`p-2 rounded border-2 cursor-move hover:shadow-lg transition-all ${
+                          className={`p-1.5 md:p-2 rounded border-2 cursor-move hover:shadow-lg transition-all ${
                             draggedPlayer === p.id ? 'opacity-50' : ''
                           }`}
                           onMouseEnter={(e) => {
@@ -830,7 +830,7 @@ export default function BzzgreTimeUpGame({
                             e.currentTarget.style.borderColor = barThemeStyles.border;
                           }}
                         >
-                          <span className="text-xs font-medium">👤 {p.name}</span>
+                          <span className="text-[10px] md:text-xs font-medium">👤 {p.name}</span>
                         </div>
                       ))}
                     </div>
@@ -838,8 +838,8 @@ export default function BzzgreTimeUpGame({
                 </Card>
               )}
 
-              <Button onClick={demarrerJeu} size="lg" className="w-full">
-                <Users className="mr-2 h-5 w-5" />
+              <Button onClick={demarrerJeu} size="sm" className="w-full text-xs md:text-base h-10 md:h-12">
+                <Users className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
                 Commencer le jeu
               </Button>
             </CardContent>
@@ -852,48 +852,48 @@ export default function BzzgreTimeUpGame({
   // ÉCRAN FIN DE JEU
   if (gameState.jeuTermine) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
-        <div className="w-full max-w-2xl my-4">
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-1 md:p-4 overflow-y-auto">
+        <div className="w-full max-w-2xl my-2 md:my-4">
           <Card className="shadow-2xl">
-            <CardContent className="p-6 md:p-12 text-center space-y-4">
-              <div className="text-6xl md:text-8xl mb-4">🏆</div>
-              <h2 className="text-2xl md:text-4xl font-bold">
+            <CardContent className="p-4 md:p-12 text-center space-y-2 md:space-y-4">
+              <div className="text-4xl md:text-8xl mb-2 md:mb-4">🏆</div>
+              <h2 className="text-xl md:text-4xl font-bold">
                 {gagnants.length === 1 ? `${gagnants[0].nom} gagne !` : "Égalité !"}
               </h2>
               
               {/* Classement */}
-              <div className="space-y-2 mt-4">
+              <div className="space-y-1 md:space-y-2 mt-2 md:mt-4">
                 {classement.map((equipe, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded-lg ${
+                    className={`p-2 md:p-3 rounded-lg ${
                       index === 0 ? 'bg-yellow-500/20 border-2 border-yellow-500' : 'bg-muted/30'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold">
+                      <span className="text-sm md:text-base font-semibold">
                         {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`} {equipe.nom}
                       </span>
-                      <span className="text-xl font-bold">{equipe.score} pts</span>
+                      <span className="text-lg md:text-xl font-bold">{equipe.score} pts</span>
                     </div>
                   </div>
                 ))}
               </div>
 
               {gagnants.length === 1 && classement.length > 1 && (
-                <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                  <p className="text-sm md:text-lg font-semibold text-red-600 dark:text-red-400">
+                <div className="mt-2 md:mt-4 p-2 md:p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <p className="text-xs md:text-lg font-semibold text-red-600 dark:text-red-400">
                     🍺 Les perdants boivent !
                   </p>
                 </div>
               )}
-              <div className="flex gap-2 pt-4">
-                <Button onClick={resetJeu} className="flex-1" size="lg">
-                  <RotateCcw className="mr-2 h-5 w-5" />
-                  Rejouer
+              <div className="flex gap-2 pt-2 md:pt-4">
+                <Button onClick={resetJeu} className="flex-1" size="sm">
+                  <RotateCcw className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  <span className="text-xs md:text-base">Rejouer</span>
                 </Button>
-                <Button onClick={onClose} variant="outline" className="flex-1" size="lg">
-                  Retour
+                <Button onClick={onClose} variant="outline" className="flex-1" size="sm">
+                  <span className="text-xs md:text-base">Retour</span>
                 </Button>
               </div>
             </CardContent>
@@ -905,41 +905,41 @@ export default function BzzgreTimeUpGame({
 
   // ÉCRAN PRINCIPAL JEU
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
-      <div className="w-full max-w-3xl my-4">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-1 md:p-4 overflow-y-auto">
+      <div className="w-full max-w-3xl my-2 md:my-4">
         <Card className="shadow-2xl">
-          <CardHeader className="space-y-2 p-3 md:p-6">
-            <div className="flex items-start justify-between gap-2">
+          <CardHeader className="space-y-1 md:space-y-2 p-2 md:p-6">
+            <div className="flex items-start justify-between gap-1 md:gap-2">
               <div className="flex-1">
-                <CardTitle className="text-lg md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
+                <CardTitle className="text-base md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
                   ⏱️ Time's Up Bzzgre
                 </CardTitle>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5 md:mt-1">
                   Tours 1-2: 30s | Tour 3: 40s
                 </p>
               </div>
-              <Button onClick={onClose} variant="ghost" size="icon">
-                <X className="h-5 w-5" />
+              <Button onClick={onClose} variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10">
+                <X className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </div>
 
             {/* Warning */}
-            <div className="mt-2">
+            <div className="mt-1 md:mt-2">
               <button
                 onClick={() => setIsWarningVisible(!isWarningVisible)}
-                className="w-full flex items-center justify-between gap-2 p-2 md:p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg hover:bg-yellow-500/20 transition-colors"
+                className="w-full flex items-center justify-between gap-1 md:gap-2 p-1.5 md:p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg hover:bg-yellow-500/20 transition-colors"
               >
-                <div className="flex items-center gap-2 flex-1">
-                  <span className="text-lg shrink-0">⚠️</span>
-                  <span className="text-[10px] md:text-xs text-yellow-600 dark:text-yellow-400 font-medium text-left">
+                <div className="flex items-center gap-1 md:gap-2 flex-1">
+                  <span className="text-base md:text-lg shrink-0">⚠️</span>
+                  <span className="text-[9px] md:text-xs text-yellow-600 dark:text-yellow-400 font-medium text-left">
                     Règles : Chaque tour dure jusqu'à ce que tous les mots soient trouvés !
                   </span>
                 </div>
-                {isWarningVisible ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                {isWarningVisible ? <ChevronUp className="h-3 w-3 md:h-4 md:w-4" /> : <ChevronDown className="h-3 w-3 md:h-4 md:w-4" />}
               </button>
               
               {isWarningVisible && (
-                <div className="mt-2 p-2 md:p-3 bg-muted/50 rounded-lg text-[10px] md:text-xs text-muted-foreground space-y-1">
+                <div className="mt-1 md:mt-2 p-1.5 md:p-3 bg-muted/50 rounded-lg text-[9px] md:text-xs text-muted-foreground space-y-0.5 md:space-y-1">
                   <p><strong>Tour 1:</strong> Décris (30s/manche)</p>
                   <p><strong>Tour 2:</strong> 1 mot (30s/manche)</p>
                   <p><strong>Tour 3:</strong> Mime (40s/manche)</p>
@@ -949,9 +949,9 @@ export default function BzzgreTimeUpGame({
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-3 p-3 md:p-6 md:pt-0">
+          <CardContent className="space-y-2 md:space-y-3 p-2 md:p-6 md:pt-0">
             {/* Équipes */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2">
               {gameState.equipes.map((equipe, index) => {
                 const couleurs = [
                   "border-blue-500 bg-blue-500/10",
@@ -970,12 +970,12 @@ export default function BzzgreTimeUpGame({
                     key={index}
                     className={`${estActive ? `border-2 ${couleur}` : 'opacity-60'}`}
                   >
-                    <CardContent className="p-2 md:p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold truncate">{equipe.nom}</span>
-                        <span className="text-lg md:text-xl font-bold">{equipe.score}</span>
+                    <CardContent className="p-1.5 md:p-3">
+                      <div className="flex items-center justify-between mb-0.5 md:mb-1">
+                        <span className="text-[10px] md:text-xs font-semibold truncate">{equipe.nom}</span>
+                        <span className="text-base md:text-xl font-bold">{equipe.score}</span>
                       </div>
-                      <div className="text-[9px] md:text-[10px] text-muted-foreground truncate">
+                      <div className="text-[8px] md:text-[10px] text-muted-foreground truncate">
                         {joueursEquipe.map(p => p.name).join(', ')}
                       </div>
                     </CardContent>
@@ -986,24 +986,24 @@ export default function BzzgreTimeUpGame({
 
             {/* Stats */}
             <Card className="bg-muted/30">
-              <CardContent className="p-3">
-                <div className="flex items-center justify-between text-center gap-3">
+              <CardContent className="p-2 md:p-3">
+                <div className="flex items-center justify-between text-center gap-2 md:gap-3">
                   <div className="flex-1">
-                    <div className="text-xs text-muted-foreground">Tour</div>
-                    <div className="text-2xl font-bold">{gameState.tour}/3</div>
+                    <div className="text-[9px] md:text-xs text-muted-foreground">Tour</div>
+                    <div className="text-xl md:text-2xl font-bold">{gameState.tour}/3</div>
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-muted-foreground">Temps</div>
-                    <div className={`text-3xl font-bold ${gameState.temps <= 10 ? 'text-red-500 animate-pulse' : ''}`}>
+                    <div className="text-[9px] md:text-xs text-muted-foreground">Temps</div>
+                    <div className={`text-2xl md:text-3xl font-bold ${gameState.temps <= 10 ? 'text-red-500 animate-pulse' : ''}`}>
                       {Math.floor(gameState.temps / 60)}:{String(gameState.temps % 60).padStart(2, '0')}
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="text-xs text-muted-foreground">Mots</div>
-                    <div className="text-2xl font-bold">{gameState.motsUtilisesCeTour.length}/40</div>
+                    <div className="text-[9px] md:text-xs text-muted-foreground">Mots</div>
+                    <div className="text-xl md:text-2xl font-bold">{gameState.motsUtilisesCeTour.length}/40</div>
                   </div>
                 </div>
-                <div className="mt-2 w-full bg-muted rounded-full h-2 overflow-hidden">
+                <div className="mt-1 md:mt-2 w-full bg-muted rounded-full h-1.5 md:h-2 overflow-hidden">
                   <div
                     className="bg-gradient-to-r from-green-500 to-red-500 h-full transition-all"
                     style={{ width: `${(gameState.temps / dureeManche) * 100}%` }}
@@ -1015,12 +1015,12 @@ export default function BzzgreTimeUpGame({
             {/* Fin de manche */}
             {gameState.mancheTerminee && !gameState.tourTermine && (
               <Card className="border-2 border-yellow-500 bg-yellow-500/10">
-                <CardContent className="p-4 text-center space-y-3">
-                  <div className="text-3xl">⏰</div>
-                  <h3 className="text-lg font-bold">Temps écoulé !</h3>
-                  <Button onClick={mancheSuivante} size="lg" className="w-full">
-                    <ChevronRight className="mr-2" />
-                    {gameState.equipes[(gameState.equipeActuelleIndex + 1) % gameState.equipes.length].nom} joue
+                <CardContent className="p-3 md:p-4 text-center space-y-2 md:space-y-3">
+                  <div className="text-2xl md:text-3xl">⏰</div>
+                  <h3 className="text-base md:text-lg font-bold">Temps écoulé !</h3>
+                  <Button onClick={mancheSuivante} size="sm" className="w-full">
+                    <ChevronRight className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                    <span className="text-xs md:text-base">{gameState.equipes[(gameState.equipeActuelleIndex + 1) % gameState.equipes.length].nom} joue</span>
                   </Button>
                 </CardContent>
               </Card>
@@ -1029,20 +1029,20 @@ export default function BzzgreTimeUpGame({
             {/* Fin de tour */}
             {gameState.tourTermine && (
               <Card className="border-2 border-green-500 bg-green-500/10">
-                <CardContent className="p-4 text-center space-y-3">
-                  <div className="text-3xl">🎉</div>
-                  <h3 className="text-lg font-bold">Tour {gameState.tour} terminé !</h3>
-                  <div className="space-y-1">
+                <CardContent className="p-3 md:p-4 text-center space-y-2 md:space-y-3">
+                  <div className="text-2xl md:text-3xl">🎉</div>
+                  <h3 className="text-base md:text-lg font-bold">Tour {gameState.tour} terminé !</h3>
+                  <div className="space-y-0.5 md:space-y-1">
                     {gameState.equipes.map((eq, i) => (
-                      <div key={i} className="flex justify-between items-center">
+                      <div key={i} className="flex justify-between items-center text-sm md:text-base">
                         <span className="font-semibold">{eq.nom}</span>
-                        <span className="text-lg font-bold">{eq.score} pts</span>
+                        <span className="text-base md:text-lg font-bold">{eq.score} pts</span>
                       </div>
                     ))}
                   </div>
-                  <Button onClick={tourSuivant} size="lg" className="w-full">
-                    <ChevronRight className="mr-2" />
-                    {gameState.tour >= NOMBRE_TOURS ? 'Résultats' : `Tour ${gameState.tour + 1}`}
+                  <Button onClick={tourSuivant} size="sm" className="w-full">
+                    <ChevronRight className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                    <span className="text-xs md:text-base">{gameState.tour >= NOMBRE_TOURS ? 'Résultats' : `Tour ${gameState.tour + 1}`}</span>
                   </Button>
                 </CardContent>
               </Card>
@@ -1051,22 +1051,22 @@ export default function BzzgreTimeUpGame({
             {/* Mot */}
             {!gameState.mancheTerminee && !gameState.tourTermine && (
               <Card className="border-2 border-primary bg-gradient-to-br from-primary/5 to-secondary/5">
-                <CardContent className="p-6 space-y-4">
-                  <div className="text-center space-y-2">
-                    <div className="text-xs text-muted-foreground">{motActuel.instruction}</div>
-                    <div className="text-3xl md:text-5xl font-bold min-h-[100px] flex items-center justify-center">
+                <CardContent className="p-3 md:p-6 space-y-2 md:space-y-4">
+                  <div className="text-center space-y-1 md:space-y-2">
+                    <div className="text-[9px] md:text-xs text-muted-foreground">{motActuel.instruction}</div>
+                    <div className="text-2xl md:text-5xl font-bold min-h-[60px] md:min-h-[100px] flex items-center justify-center">
                       {motActuel.texte}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-1 md:gap-2">
                     <Button
                       onClick={motPasse}
                       disabled={gameState.enPause || gameState.motActuelIndex === null}
-                      className="h-16 bg-green-600 hover:bg-green-700"
-                      size="lg"
+                      className="h-12 md:h-16 bg-green-600 hover:bg-green-700 text-xs md:text-base"
+                      size="sm"
                     >
-                      <Check className="mr-1 h-5 w-5" />
+                      <Check className="mr-0.5 md:mr-1 h-4 w-4 md:h-5 md:w-5" />
                       PASSÉ
                     </Button>
 
@@ -1074,23 +1074,23 @@ export default function BzzgreTimeUpGame({
                       onClick={skipMot}
                       disabled={gameState.enPause || gameState.motActuelIndex === null}
                       variant="destructive"
-                      className="h-16"
-                      size="lg"
+                      className="h-12 md:h-16 text-xs md:text-base"
+                      size="sm"
                     >
-                      <X className="mr-1 h-5 w-5" />
+                      <X className="mr-0.5 md:mr-1 h-4 w-4 md:h-5 md:w-5" />
                       SKIP
                     </Button>
 
                     <Button
                       onClick={gameState.enPause ? demarrerManche : pauserManche}
                       variant="outline"
-                      className="h-16"
-                      size="lg"
+                      className="h-12 md:h-16 text-xs md:text-base"
+                      size="sm"
                     >
                       {gameState.enPause ? (
-                        <><Play className="mr-1 h-5 w-5" />PLAY</>
+                        <><Play className="mr-0.5 md:mr-1 h-4 w-4 md:h-5 md:w-5" />PLAY</>
                       ) : (
-                        <><Pause className="mr-1 h-5 w-5" />PAUSE</>
+                        <><Pause className="mr-0.5 md:mr-1 h-4 w-4 md:h-5 md:w-5" />PAUSE</>
                       )}
                     </Button>
                   </div>
