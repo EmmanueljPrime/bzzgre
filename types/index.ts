@@ -73,7 +73,7 @@ export const AVAILABLE_BARS: Bar[] = [
     logo: '/bar_brand/fusion_logo.webp',
     theme: {
       primary: '45 90% 55%', // Jaune gold
-      secondary: '30 20% 20%', // Marron
+      secondary: '22 75% 58%', // Cuivré voyant
       accent: '45 100% 65%', // Jaune clair
       background: '0 0% 8%', // Noir profond
       cardBg: '30 15% 15%', // Marron foncé
@@ -205,6 +205,87 @@ export const AVAILABLE_BARS: Bar[] = [
           { nom: "Bénédictine", descriptif: "40°", prix: "8€" }
         ]
       }
+    }
+  },
+  {
+    id: 'les-planches',
+    name: 'Les Planches',
+    description: 'Bar convivial ambiance bord de mer',
+    logo: '/bar_brand/lesplancheslogo.png',
+    theme: {
+      primary: '30 40% 35%', // Bois très foncé / marron sombre
+      secondary: '22 75% 58%', // Cuivré voyant
+      accent: '35 60% 55%', // Cuivre vintage
+      background: '25 30% 8%', // Bois extrêmement foncé
+      cardBg: '28 35% 12%', // Bois très foncé
+    },
+    drinks: [], // Gardé vide pour compatibilité
+    categorizedDrinks: {
+      "Softs": [
+        { nom: "Coca-Cola", descriptif: "", prix: "3€" },
+        { nom: "Sprite", descriptif: "", prix: "3€" },
+        { nom: "Orangina", descriptif: "", prix: "3€" },
+        { nom: "Perrier", descriptif: "", prix: "3€" }
+      ],
+      "Aperitifs": [
+        { nom: "Martini Bianco", descriptif: "", prix: "4€" },
+        { nom: "Martini Rosé", descriptif: "", prix: "4€" },
+        { nom: "Prosecco", descriptif: "", prix: "5€" }
+      ],
+      "Bieres": {
+        "Pression": [
+          { nom: "Kronenbourg", descriptif: "25cl", prix: "3.5€" },
+          { nom: "Leffe Blonde", descriptif: "25cl", prix: "4€" },
+          { nom: "Guinness", descriptif: "25cl", prix: "4.5€" }
+        ],
+        "Bouteille": [
+          { nom: "Desperados", descriptif: "33cl", prix: "5€" },
+          { nom: "Heineken", descriptif: "33cl", prix: "4.5€" },
+          { nom: "Corona", descriptif: "33cl", prix: "5€" }
+        ]
+      },
+      "Vins": {
+        "Blancs": [
+          { nom: "Domaine de la Croix", descriptif: "", prix: "8€" },
+          { nom: "Château La Grolet", descriptif: "", prix: "9€" },
+          { nom: "Les Belles Grives", descriptif: "", prix: "9€" },
+          { nom: "Château Lamothe", descriptif: "", prix: "8€" },
+          { nom: "Domaine de l'Herre", descriptif: "", prix: "9€" }
+        ],
+        "Rouges": [
+          { nom: "La Cave du Tue-Bœuf", descriptif: "", prix: "8€" },
+          { nom: "Les Rocailles", descriptif: "", prix: "9€" },
+          { nom: "Château Laulerie", descriptif: "", prix: "9€" },
+          { nom: "Mas des Aumérants", descriptif: "", prix: "10€" },
+          { nom: "Château Moulin Caresse", descriptif: "", prix: "9€" }
+        ]
+      },
+      "AlcoolsetDigestifs": [
+        { nom: "Whisky bourbon", descriptif: "43° single malt tourbé", prix: "14€" },
+        { nom: "Whisky tourbé", descriptif: "43° single malt d'Islay", prix: "14€" },
+        { nom: "Gin Hendrick's", descriptif: "41.4° concombre, rose, épices", prix: "11€" },
+        { nom: "Gin London Dry", descriptif: "41.4° baies de genévrier, épices", prix: "11€" },
+        { nom: "Rhums Zaya", descriptif: "Guatemala 40° fruits, vanille", prix: "17€" },
+        { nom: "Rhums Dictador", descriptif: "2 ans de vieillissement, fruits secs", prix: "18€" },
+        { nom: "Rhum Raphaël", descriptif: "Guadeloupe 45° canne fraîche", prix: "15€" },
+        { nom: "Armagnac Castarède", descriptif: "VSOP 40° fruits secs, épices", prix: "16€" },
+        { nom: "Armagnac Baron de Sigognac", descriptif: "30 ans 40° pruneau, rancio", prix: "18€" },
+        { nom: "Calvados Dupont", descriptif: "42° pommes, bois", prix: "13€" },
+        { nom: "Calvados Roger Groult", descriptif: "5 ans 42° pommes, cannelle", prix: "18€" }
+      ],
+      "Cocktails": [
+        { nom: "Red from USA", descriptif: "jus de citron, de pêche, bitters", prix: "12€" },
+        { nom: "Mojito classique", descriptif: "rhum blanc, citron vert, menthe, canne", prix: "10€" },
+        { nom: "Mojito cubain", descriptif: "rhum blanc, citron vert, menthe, canne", prix: "10€" },
+        { nom: "Long Island Ice Tea", descriptif: "vodka, gin, rhum, tequila, triple sec, citron vert", prix: "12€" },
+        { nom: "Daiquiri", descriptif: "rhum blanc, citron vert, sirop de canne", prix: "10€" },
+        { nom: "Pina Colada", descriptif: "rhum blanc, crème de coco, ananas", prix: "10€" },
+        { nom: "Spritz", descriptif: "prosecco, Aperol, eau gazeuse", prix: "9€" },
+        { nom: "Irish Coffee", descriptif: "whisky, café, crème fouettée", prix: "9€" },
+        { nom: "Mojito espresso", descriptif: "vodka, liqueur espresso", prix: "10€" },
+        { nom: "Sex on the beach", descriptif: "vodka, liqueur pêche, cranberry", prix: "7€" },
+        { nom: "Cocktail sur demande", descriptif: "", prix: "12€" }
+      ]
     }
   },
   {

@@ -58,12 +58,11 @@ export default function BarSelectionModal({
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     {bar.logo ? (
-                      <div className="mb-2 h-12 relative">
+                      <div className="h-16 w-full max-w-[240px] relative mx-auto">
                         <Image 
                           src={bar.logo} 
                           alt={bar.name}
-                          width={150}
-                          height={48}
+                          fill
                           className="object-contain"
                           style={{ filter: 'brightness(0) saturate(100%) invert(1)' }}
                         />
@@ -76,7 +75,6 @@ export default function BarSelectionModal({
                         {bar.name}
                       </h3>
                     )}
-                    <p className="text-sm text-muted-foreground">{bar.description}</p>
                     {bar.drinks.length > 0 && (
                       <p className="text-xs text-muted-foreground mt-2">
                         {bar.drinks.length} boissons disponibles

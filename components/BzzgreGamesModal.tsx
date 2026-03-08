@@ -79,12 +79,12 @@ export default function BzzgreGamesModal({
               <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                 <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
                   Un jeu de vérités et d'actions qui va révéler les secrets les plus croustillants. 
-                  Chaque joueur a son propre deck de 55 questions uniques. Attention, ça va chauffer ! 🔥
+                  Chaque joueur a son propre deck de 61 questions uniques. Attention, ça va chauffer ! 🔥
                 </p>
                 <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
                   <span>👥 {participants.length} joueurs</span>
                   <span>•</span>
-                  <span>📝 {participants.length * 55} questions</span>
+                  <span>📝 {participants.length * 61} questions</span>
                 </div>
               </CardContent>
             </Card>

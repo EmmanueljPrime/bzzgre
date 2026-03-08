@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppState, Config, Participant, initialAppState, Bar } from '@/types';
+import { AppState, Config, Participant, initialAppState, Bar, AVAILABLE_BARS } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import Header from '@/components/Header';
 import SetupForm from '@/components/SetupForm';
@@ -33,6 +33,22 @@ export default function Home() {
       setCurrentScreen('setup');
     }
   }, [isClient, appState]);
+
+  // Initialiser le bar par défaut avec Fusion si aucun bar n'est sélectionné
+  useEffect(() => {
+    if (!isClient) return;
+    
+    if (!appState.config.selectedBar && AVAILABLE_BARS.length > 0) {
+      setAppState({
+        ...appState,
+        config: {
+          ...appState.config,
+          selectedBar: AVAILABLE_BARS[0], // Fusion est le premier bar
+        },
+      });
+    }
+  }, [isClient]);
+
 
   // Gestion de la configuration initiale
   const handleSetupSubmit = (config: Config) => {

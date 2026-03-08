@@ -84,12 +84,11 @@ export default function ResultsScreen({
           >
             {selectedBar?.logo ? (
               <div className="flex items-center gap-2">
-                <div className="h-6 w-auto relative">
+                <div className="h-8 w-28 relative">
                   <Image 
                     src={selectedBar.logo} 
                     alt={selectedBar.name}
-                    width={80}
-                    height={24}
+                    fill
                     className="object-contain"
                     style={{ filter: 'brightness(0) saturate(100%) invert(1)' }}
                   />
