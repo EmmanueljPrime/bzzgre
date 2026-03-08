@@ -542,7 +542,8 @@ export default function BzzgreTimeUpGame({
         ...prev,
         tour: prev.tour + 1,
         temps: duree,
-        equipeActuelleIndex: 0,
+        // L'équipe qui a trouvé le dernier mot ne commence pas : on passe à la suivante
+        equipeActuelleIndex: (prev.equipeActuelleIndex + 1) % prev.equipes.length,
         motActuelIndex: null,
         motsUtilisesCeTour: [],
         enPause: true,
