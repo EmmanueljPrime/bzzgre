@@ -140,12 +140,28 @@ export default function BzzgreMissionGame({
     }
   }, [gameState, storageKey]);
 
-  // Get a random player name (excluding current player)
-  const getRandomPlayerName = (excludeId: number): string => {
+  // Get random player names (excluding current player), favoring unique picks first
+  const getRandomPlayerNames = (excludeId: number, count: number): string[] => {
     const availablePlayers = participants.filter((p) => p.id !== excludeId);
-    if (availablePlayers.length === 0) return 'un joueur';
-    const randomPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
-    return randomPlayer.name;
+
+    if (availablePlayers.length === 0) {
+      return Array.from({ length: count }, () => 'un joueur');
+    }
+
+    // Shuffle once to get unique players first for repeated placeholders
+    const shuffledPlayers = [...availablePlayers].sort(() => Math.random() - 0.5);
+    const selectedNames: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      if (i < shuffledPlayers.length) {
+        selectedNames.push(shuffledPlayers[i].name);
+      } else {
+        const randomPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+        selectedNames.push(randomPlayer.name);
+      }
+    }
+
+    return selectedNames;
   };
 
   // Replace <PLAYER> placeholder with actual player names
@@ -154,8 +170,9 @@ export default function BzzgreMissionGame({
     const matches = question.match(/<PLAYER>/g);
     
     if (matches) {
-      matches.forEach(() => {
-        const playerName = getRandomPlayerName(currentPlayerId);
+      const playerNames = getRandomPlayerNames(currentPlayerId, matches.length);
+
+      playerNames.forEach((playerName) => {
         result = result.replace('<PLAYER>', playerName);
       });
     }
