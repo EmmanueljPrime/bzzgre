@@ -3,14 +3,10 @@ import { useState, useEffect } from 'react';
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(initialValue);
   const [isClient, setIsClient] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
     try {
       const item = window.localStorage.getItem(key);
       if (item) {
@@ -18,17 +14,22 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       }
     } catch (error) {
       console.error(`Error loading ${key} from localStorage:`, error);
+    } finally {
+      setIsHydrated(true);
     }
-  }, [key, isClient]);
+  }, [key]);
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
+      setStoredValue((prevValue) => {
+        const valueToStore = value instanceof Function ? value(prevValue) : value;
 
-      if (isClient) {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      }
+        if (isClient) {
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        }
+
+        return valueToStore;
+      });
     } catch (error) {
       console.error(`Error saving ${key} to localStorage:`, error);
     }
@@ -45,5 +46,5 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     }
   };
 
-  return [storedValue, setValue, clearValue, isClient] as const;
+  return [storedValue, setValue, clearValue, isClient, isHydrated] as const;
 }

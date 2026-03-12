@@ -250,7 +250,7 @@ export default function ParticipantEntry({
 
         {/* Carte des boissons du bar */}
         {selectedBar && (selectedBar.drinks.length > 0 || selectedBar.categorizedDrinks) && (
-          <Card className="lg:col-span-1 h-fit max-h-[700px] overflow-hidden flex flex-col">
+          <Card className="lg:col-span-1 h-fit max-h-[700px] overflow-hidden flex flex-col min-h-0">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Carte {selectedBar.name}</CardTitle>
               <CardDescription>Cliquez pour ajouter rapidement</CardDescription>
@@ -260,7 +260,7 @@ export default function ParticipantEntry({
             {selectedBar.categorizedDrinks ? (
               <>
                 {/* Onglets des catégories */}
-                <div className="px-6 pb-3 border-b overflow-x-auto">
+                <div className="px-6 pb-3 border-b overflow-x-auto shrink-0 bg-card">
                   <div className="flex gap-2 min-w-max">
                     {Object.keys(selectedBar.categorizedDrinks).map((category) => (
                       <button
@@ -279,7 +279,7 @@ export default function ParticipantEntry({
                 </div>
                 
                 {/* Contenu de la catégorie active */}
-                <CardContent className="overflow-y-auto flex-1 pt-4">
+                <CardContent className="overflow-y-auto flex-1 min-h-0 pt-4">
                   {activeCategory && selectedBar.categorizedDrinks[activeCategory] && (
                     <div className="space-y-4">
                       {/* Vérifier si c'est un array direct ou des sous-catégories */}
@@ -312,7 +312,7 @@ export default function ParticipantEntry({
                         // Sous-catégories
                         Object.entries(selectedBar.categorizedDrinks[activeCategory] as Record<string, DrinkItem[]>).map(
                           ([subCategory, items]) => (
-                            <div key={subCategory}>
+                            <div key={subCategory} className="pt-1 first:pt-0">
                               <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                                 {subCategory}
                               </h4>

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { Participant, Bar } from '@/types';
+import { useEffect, useState } from 'react';
+import { Participant, Bar, DrinkItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Trash2, Wine } from 'lucide-react';
+import { Plus, Trash2, Wine, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface EditParticipantModalProps {
   participant: Participant;
@@ -23,6 +23,20 @@ export default function EditParticipantModal({
   const [drinks, setDrinks] = useState<string[]>([...participant.drinks]);
   const [errors, setErrors] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [isBarCardExpanded, setIsBarCardExpanded] = useState(true);
+
+  useEffect(() => {
+    if (!selectedBar?.categorizedDrinks) {
+      setActiveCategory(null);
+      return;
+    }
+
+    const categories = Object.keys(selectedBar.categorizedDrinks);
+    if (categories.length > 0) {
+      setActiveCategory(categories[0]);
+    }
+  }, [selectedBar]);
 
   const validate = () => {
     const newErrors: string[] = [];
@@ -175,27 +189,143 @@ export default function EditParticipantModal({
         </Card>
 
         {/* Carte des boissons du bar */}
-        {selectedBar && selectedBar.drinks.length > 0 && (
-          <Card className="lg:col-span-1 overflow-y-auto">
-            <CardHeader>
-              <CardTitle className="text-lg">Carte {selectedBar.name}</CardTitle>
-              <CardDescription>Cliquez pour ajouter</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-2">
-                {selectedBar.drinks.map((drink, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => addDrinkFromBar(drink)}
-                    className="flex items-center gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
-                  >
-                    <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                    <span className="text-sm">{drink}</span>
-                  </button>
-                ))}
+        {selectedBar && (selectedBar.drinks.length > 0 || selectedBar.categorizedDrinks) && (
+          <Card className="lg:col-span-1 h-fit max-h-[700px] overflow-hidden flex flex-col min-h-0">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <CardTitle className="text-lg">Carte {selectedBar.name}</CardTitle>
+                  <CardDescription>Cliquez pour ajouter rapidement</CardDescription>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsBarCardExpanded((prev) => !prev)}
+                  className="shrink-0"
+                >
+                  {isBarCardExpanded ? (
+                    <>
+                      <ChevronUp className="h-4 w-4" />
+                      Rétracter
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4" />
+                      Afficher
+                    </>
+                  )}
+                </Button>
               </div>
-            </CardContent>
+            </CardHeader>
+
+            {isBarCardExpanded && (
+              <>
+                {selectedBar.categorizedDrinks ? (
+                  <>
+                    <div className="px-6 pb-3 border-b overflow-x-auto shrink-0 bg-card">
+                      <div className="flex gap-2 min-w-max">
+                        {Object.keys(selectedBar.categorizedDrinks).map((category) => (
+                          <button
+                            key={category}
+                            type="button"
+                            onClick={() => setActiveCategory(category)}
+                            className={`px-3 py-1.5 text-xs md:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
+                              activeCategory === category
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground'
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <CardContent className="overflow-y-auto flex-1 min-h-0 pt-4">
+                      {activeCategory && selectedBar.categorizedDrinks[activeCategory] && (
+                        <div className="space-y-4">
+                          {Array.isArray(selectedBar.categorizedDrinks[activeCategory]) ? (
+                            <div className="grid grid-cols-1 gap-2">
+                              {(selectedBar.categorizedDrinks[activeCategory] as DrinkItem[]).map((drink, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onClick={() => addDrinkFromBar(drink.nom)}
+                                  className="flex items-start gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                                >
+                                  <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-baseline justify-between gap-2">
+                                      <span className="text-sm font-medium">{drink.nom}</span>
+                                      {drink.prix && (
+                                        <span className="text-xs text-primary font-semibold whitespace-nowrap">{drink.prix}</span>
+                                      )}
+                                    </div>
+                                    {drink.descriptif && (
+                                      <p className="text-xs text-muted-foreground mt-0.5">{drink.descriptif}</p>
+                                    )}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            Object.entries(selectedBar.categorizedDrinks[activeCategory] as Record<string, DrinkItem[]>).map(
+                              ([subCategory, items]) => (
+                                <div key={subCategory} className="pt-1 first:pt-0">
+                                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                    {subCategory}
+                                  </h4>
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {items.map((drink, index) => (
+                                      <button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => addDrinkFromBar(drink.nom)}
+                                        className="flex items-start gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                                      >
+                                        <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-baseline justify-between gap-2">
+                                            <span className="text-sm font-medium">{drink.nom}</span>
+                                            {drink.prix && (
+                                              <span className="text-xs text-primary font-semibold whitespace-nowrap">{drink.prix}</span>
+                                            )}
+                                          </div>
+                                          {drink.descriptif && (
+                                            <p className="text-xs text-muted-foreground mt-0.5">{drink.descriptif}</p>
+                                          )}
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )
+                            )
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </>
+                ) : (
+                  <CardContent className="overflow-y-auto">
+                    <div className="grid grid-cols-1 gap-2">
+                      {selectedBar.drinks.map((drink, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => addDrinkFromBar(drink)}
+                          className="flex items-center gap-2 p-3 rounded-lg border border-input hover:border-primary hover:bg-primary/10 transition-all text-left group active:scale-95 active:bg-primary/20 touch-manipulation"
+                        >
+                          <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                          <span className="text-sm">{drink}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                )}
+              </>
+            )}
           </Card>
         )}
       </div>

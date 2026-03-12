@@ -12,7 +12,7 @@ import BarSelectionModal from '@/components/BarSelectionModal';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
-  const [appState, setAppState, clearAppState, isClient] = useLocalStorage<AppState>(
+  const [appState, setAppState, clearAppState, isClient, isStorageHydrated] = useLocalStorage<AppState>(
     'bzzgre-state',
     initialAppState
   );
@@ -23,7 +23,7 @@ export default function Home() {
 
   // Déterminer l'écran à afficher au chargement
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !isStorageHydrated) return;
 
     if (appState.isSetupComplete && appState.participants.length > 0) {
       setCurrentScreen('results');
@@ -36,18 +36,18 @@ export default function Home() {
 
   // Initialiser le bar par défaut avec Fusion si aucun bar n'est sélectionné
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !isStorageHydrated) return;
     
     if (!appState.config.selectedBar && AVAILABLE_BARS.length > 0) {
-      setAppState({
-        ...appState,
+      setAppState((previousState) => ({
+        ...previousState,
         config: {
-          ...appState.config,
+          ...previousState.config,
           selectedBar: AVAILABLE_BARS[0], // Fusion est le premier bar
         },
-      });
+      }));
     }
-  }, [isClient]);
+  }, [isClient, isStorageHydrated, appState.config.selectedBar]);
 
 
   // Gestion de la configuration initiale
@@ -130,6 +130,37 @@ export default function Home() {
     });
   };
 
+  // Relancer la boisson d'un participant uniquement
+  const handleRerollDrinkForParticipant = (participantId: number) => {
+    if (!appState.isDrawingComplete) return;
+
+    const allDrinks: string[] = [];
+    appState.participants.forEach((participant) => {
+      allDrinks.push(...participant.drinks);
+    });
+
+    if (allDrinks.length === 0) return;
+
+    const updatedParticipants = appState.participants.map((participant) => {
+      if (participant.id !== participantId) return participant;
+
+      const availableDrinks = allDrinks.filter((drink) => drink !== participant.assignedDrink);
+      const rerollPool = availableDrinks.length > 0 ? availableDrinks : allDrinks;
+      const newDrink = rerollPool[Math.floor(Math.random() * rerollPool.length)] || null;
+
+      return {
+        ...participant,
+        assignedDrink: newDrink,
+      };
+    });
+
+    setAppState({
+      ...appState,
+      participants: updatedParticipants,
+      isDrawingComplete: true,
+    });
+  };
+
   // Éditer un participant spécifique
   const handleEditParticipant = (participantId: number) => {
     setEditingParticipantId(participantId);
@@ -199,10 +230,23 @@ export default function Home() {
     setCurrentScreen('setup');
   };
 
-  if (!isClient) {
+  if (!isClient || !isStorageHydrated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 flex items-center justify-center">
-        <div className="text-white text-2xl">Chargement...</div>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-amber-900 via-stone-900 to-yellow-950">
+        <div className="flex flex-col items-center gap-6 rounded-2xl border border-amber-400/30 bg-black/20 px-10 py-8 text-amber-50 shadow-2xl backdrop-blur-sm">
+          <div className="relative h-24 w-24">
+            <div className="absolute inset-0 rounded-full border-4 border-amber-300/20 border-t-amber-300 animate-spin" />
+            <div
+              className="absolute inset-2 rounded-full border-4 border-yellow-400/20 border-b-yellow-300 animate-spin"
+              style={{ animationDirection: 'reverse', animationDuration: '1.2s' }}
+            />
+            <div className="absolute inset-[34%] rounded-full bg-amber-300 shadow-[0_0_20px_rgba(252,211,77,0.8)]" />
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-semibold tracking-wide">Chargement</p>
+            <p className="text-sm text-amber-100/80">Préparation de la soirée...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -235,6 +279,7 @@ export default function Home() {
           participants={appState.participants}
           selectedBar={appState.config.selectedBar}
           onDrawDrinks={handleDrawDrinks}
+          onRerollDrink={handleRerollDrinkForParticipant}
           onEditParticipant={handleEditParticipant}
           onAddParticipant={handleAddParticipant}
           onDeleteParticipant={handleDeleteParticipant}

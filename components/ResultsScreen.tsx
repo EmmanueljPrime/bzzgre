@@ -12,6 +12,7 @@ interface ResultsScreenProps {
   participants: Participant[];
   selectedBar: Bar | null;
   onDrawDrinks: () => void;
+  onRerollDrink: (participantId: number) => void;
   onEditParticipant: (participantId: number) => void;
   onAddParticipant: () => void;
   onDeleteParticipant: (participantId: number) => void;
@@ -23,6 +24,7 @@ export default function ResultsScreen({
   participants,
   selectedBar,
   onDrawDrinks,
+  onRerollDrink,
   onEditParticipant,
   onAddParticipant,
   onDeleteParticipant,
@@ -59,7 +61,10 @@ export default function ResultsScreen({
           <Button
             onClick={() => setIsBzzgreModalOpen(true)}
             variant="secondary"
-            className="flex-1 md:flex-none bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 hover:opacity-90 transition-opacity text-white"
+            className="flex-1 md:flex-none text-white transition-all hover:brightness-110"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 55%, hsl(var(--accent)) 100%)',
+            }}
             size="lg"
           >
             <Gamepad2 className="h-5 w-5" />
@@ -154,6 +159,17 @@ export default function ResultsScreen({
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
+
+                <Button
+                  onClick={() => onRerollDrink(participant.id)}
+                  variant="secondary"
+                  className="w-full"
+                  size="sm"
+                  disabled={!isDrawn || !participant.assignedDrink}
+                >
+                  <Shuffle className="h-4 w-4" />
+                  Relancer cette boisson
+                </Button>
               </CardContent>
             </Card>
           ))}
