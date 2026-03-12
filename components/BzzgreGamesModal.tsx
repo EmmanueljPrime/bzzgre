@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, Target, Beer, Clock } from 'lucide-react';
+import { X, Target, Beer, Clock, Trees, Users } from 'lucide-react';
 import BzzgreMissionGame from './BzzgreMissionGame';
 import JeNaiJamaisGame from './JeNaiJamaisGame';
 import BzzgreTimeUpGame from './BzzgreTimeUpGame';
+import BzzgrePalmierGame from './BzzgrePalmierGame';
+import BzzgreMostLikelyToGame from './BzzgreMostLikelyToGame';
 
 interface BzzgreGamesModalProps {
   participants: Participant[];
@@ -16,7 +18,7 @@ interface BzzgreGamesModalProps {
   onClose: () => void;
 }
 
-type GameMode = 'selection' | 'mission' | 'jamais' | 'timesup';
+type GameMode = 'selection' | 'mission' | 'jamais' | 'timesup' | 'palmier' | 'likely';
 
 export default function BzzgreGamesModal({
   participants,
@@ -57,9 +59,29 @@ export default function BzzgreGamesModal({
     );
   }
 
+  if (currentMode === 'palmier') {
+    return (
+      <BzzgrePalmierGame
+        participants={participants}
+        gameId={gameId}
+        onClose={() => setCurrentMode('selection')}
+      />
+    );
+  }
+
+  if (currentMode === 'likely') {
+    return (
+      <BzzgreMostLikelyToGame
+        participants={participants}
+        gameId={gameId}
+        onClose={() => setCurrentMode('selection')}
+      />
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4">
-      <Card className="w-full max-w-2xl shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start md:items-center justify-center p-2 md:p-4 overflow-y-auto">
+      <Card className="w-full max-w-2xl max-h-[96vh] md:max-h-[92vh] overflow-y-auto shadow-2xl my-2 md:my-0">
         <CardHeader className="space-y-2 md:space-y-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl md:text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
@@ -186,6 +208,78 @@ export default function BzzgreGamesModal({
                   <span>⏱️ 30s/30s/40s</span>
                   <span>•</span>
                   <span>🎯 3 listes de 40 mots</span>
+                </div>
+              </CardContent>
+            </Card>
+          </button>
+
+          {/* Palmier Card */}
+          <button
+            onClick={() => setCurrentMode('palmier')}
+            className="w-full text-left group"
+          >
+            <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 md:space-y-2 flex-1">
+                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
+                      <Trees className="h-5 w-5 md:h-6 md:w-6" />
+                      Palmier
+                    </CardTitle>
+                    <CardDescription className="text-xs md:text-sm">
+                      Pioche de cartes • Actions rapides • Ambiance instantanee
+                    </CardDescription>
+                  </div>
+                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
+                    DISPO
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
+                  Un mini-jeu type Palmier: chaque carte tiree donne une regle a appliquer.
+                  Ideal pour relancer le rythme entre deux tours.
+                </p>
+                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
+                  <span>🃏 52 cartes</span>
+                  <span>•</span>
+                  <span>⚡ Manche ultra rapide</span>
+                </div>
+              </CardContent>
+            </Card>
+          </button>
+
+          {/* Most Likely To Card */}
+          <button
+            onClick={() => setCurrentMode('likely')}
+            className="w-full text-left group"
+          >
+            <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 md:space-y-2 flex-1">
+                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
+                      <Users className="h-5 w-5 md:h-6 md:w-6" />
+                      Most Likely To
+                    </CardTitle>
+                    <CardDescription className="text-xs md:text-sm">
+                      Vote de groupe • Qui est le plus susceptible de...
+                    </CardDescription>
+                  </div>
+                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
+                    DISPO
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
+                  Tirez une phrase, tout le monde vote, et le joueur designe boit.
+                  Rapide, drole et parfait pour chauffer la table.
+                </p>
+                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
+                  <span>🗳️ Vote instantane</span>
+                  <span>•</span>
+                  <span>🎯 60 prompts</span>
                 </div>
               </CardContent>
             </Card>
