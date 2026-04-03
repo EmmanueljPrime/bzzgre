@@ -13,8 +13,8 @@ interface JeNaiJamaisGameProps {
   onClose: () => void;
 }
 
-// 100 questions "Je n'ai jamais" progressives (soft à osé)
-const JE_NAI_JAMAIS_QUESTIONS = [
+// Grand pool de questions "Je n'ai jamais" progressives (soft a ose)
+const JE_NAI_JAMAIS_BASE_QUESTIONS = [
   // Questions 1-10: Niveau Soft
   "Je n'ai jamais menti sur mon âge.",
   "Je n'ai jamais chanté sous la douche.",
@@ -136,6 +136,149 @@ const JE_NAI_JAMAIS_QUESTIONS = [
   "Je n'ai jamais fait quelque chose d'absolument dégueulasse que je n'avouerai jamais.",
 ];
 
+const JE_NAI_JAMAIS_EXTRA_QUESTIONS = [
+  "Je n'ai jamais mangé un truc tombé par terre en mode discret.",
+  "Je n'ai jamais fait semblant d'avoir lu un livre connu.",
+  "Je n'ai jamais oublié pourquoi j'etais entre dans une piece.",
+  "Je n'ai jamais menti en disant j'arrive alors que j'etais pas parti.",
+  "Je n'ai jamais annulé un plan pour rester sous la couette.",
+  "Je n'ai jamais rigolé a un message sans le comprendre.",
+  "Je n'ai jamais fait un screenshot d'une conversation.",
+  "Je n'ai jamais relu mes messages avant d'envoyer pendant 5 minutes.",
+  "Je n'ai jamais laisse un vocal en x2.",
+  "Je n'ai jamais dit oui a un plan juste par FOMO.",
+  "Je n'ai jamais oublie mon portefeuille en sortant.",
+  "Je n'ai jamais commande la meme chose que quelqu'un pour ne pas reflechir.",
+  "Je n'ai jamais fait semblant de connaitre une chanson.",
+  "Je n'ai jamais pleure de rire en public.",
+  "Je n'ai jamais supprime puis reecrit un message 4 fois.",
+  "Je n'ai jamais passe plus d'une heure a choisir un film.",
+  "Je n'ai jamais menti sur la raison d'un retard.",
+  "Je n'ai jamais pris une capture d'ecran d'un profil.",
+  "Je n'ai jamais laisse mon reveil sonner trop longtemps.",
+  "Je n'ai jamais repris un dessert alors que j'etais deja plein.",
+  "Je n'ai jamais oublie le prenom de quelqu'un juste apres l'avoir entendu.",
+  "Je n'ai jamais garde une tenue au cas ou pendant des mois.",
+  "Je n'ai jamais fait semblant d'etre au telephone pour eviter quelqu'un.",
+  "Je n'ai jamais juge quelqu'un puis fait exactement pareil.",
+  "Je n'ai jamais envoye un message a la mauvaise personne en panique.",
+  "Je n'ai jamais pris un selfie puis passe 10 minutes a choisir.",
+  "Je n'ai jamais oublie un anniversaire puis improvise une excuse.",
+  "Je n'ai jamais regarde l'heure puis oublie direct.",
+  "Je n'ai jamais mange les restes de quelqu'un avec sa permission douteuse.",
+  "Je n'ai jamais promis je me couche tot puis fini a 3h.",
+  "Je n'ai jamais fait une playlist pour une seule personne.",
+  "Je n'ai jamais eu un crush impossible a assumer.",
+  "Je n'ai jamais stalke les stories de quelqu'un sans jamais liker.",
+  "Je n'ai jamais imaginé une vie entiere avec un crush de 3 jours.",
+  "Je n'ai jamais jalousé un couple sur les reseaux.",
+  "Je n'ai jamais envoye un coeur par reflexe puis regrette.",
+  "Je n'ai jamais repense a un message envoye il y a 3 ans.",
+  "Je n'ai jamais garde un souvenir d'une relation terminee.",
+  "Je n'ai jamais ete en crush sur quelqu'un qui ne savait meme pas mon nom.",
+  "Je n'ai jamais fait une declaration un peu trop honnête.",
+  "Je n'ai jamais dit c'est complique pour eviter d'expliquer.",
+  "Je n'ai jamais attendu une reponse en regardant l'ecran.",
+  "Je n'ai jamais relu une vieille conversation la nuit.",
+  "Je n'ai jamais eu un date qui a tourne en interview.",
+  "Je n'ai jamais eu un date ou je voulais juste partir.",
+  "Je n'ai jamais confondu gentillesse et flirt.",
+  "Je n'ai jamais dit on verra en voulant dire non.",
+  "Je n'ai jamais simule d'etre occupe pour repousser un rendez-vous.",
+  "Je n'ai jamais envoye un message en etant un peu jaloux ou jalouse.",
+  "Je n'ai jamais eu un crush au travail.",
+  "Je n'ai jamais oublie de repondre a quelqu'un pendant une semaine.",
+  "Je n'ai jamais fait une blague qui est mal passee.",
+  "Je n'ai jamais parle trop vite et dit un truc de travers.",
+  "Je n'ai jamais repris une phrase en disant c'est pas ce que je voulais dire.",
+  "Je n'ai jamais fait semblant d'aimer une chanson en soiree.",
+  "Je n'ai jamais fait un karaoke desastreux avec conviction.",
+  "Je n'ai jamais perdu un objet dans mon propre sac.",
+  "Je n'ai jamais casse quelque chose chez quelqu'un par maladresse.",
+  "Je n'ai jamais renverse un verre en soirée.",
+  "Je n'ai jamais oublie un mot hyper simple en parlant.",
+  "Je n'ai jamais fait un pari absurde juste pour rire.",
+  "Je n'ai jamais passe une nuit blanche sans l'avoir prevu.",
+  "Je n'ai jamais pris une decision impulsive que j'ai regrettee.",
+  "Je n'ai jamais reserve un voyage sur un coup de tete.",
+  "Je n'ai jamais change de plan au dernier moment.",
+  "Je n'ai jamais pris le mauvais train ou bus.",
+  "Je n'ai jamais oublie une valise ou un sac en voyage.",
+  "Je n'ai jamais dit je connais le chemin alors que non.",
+  "Je n'ai jamais perdu mes cles plus d'une fois dans la meme semaine.",
+  "Je n'ai jamais fait semblant de comprendre une regle de jeu.",
+  "Je n'ai jamais ete le dernier ou la derniere a comprendre une blague.",
+  "Je n'ai jamais mange trop epice en disant c'est tranquille.",
+  "Je n'ai jamais demande une recette sans jamais la refaire.",
+  "Je n'ai jamais cache un achat pour eviter les questions.",
+  "Je n'ai jamais oublie de rendre quelque chose emprunte.",
+  "Je n'ai jamais fait un achat de nuit que j'ai regrette au reveil.",
+  "Je n'ai jamais ete trop competitif ou competitive pour un jeu nul.",
+  "Je n'ai jamais fait un detour juste pour un fast-food.",
+  "Je n'ai jamais dit je bois pas ce soir puis change d'avis.",
+  "Je n'ai jamais regrette un texto envoye trop tard.",
+  "Je n'ai jamais critique une ex d'un ami devant lui.",
+  "Je n'ai jamais fait une promesse que je savais difficile a tenir.",
+  "Je n'ai jamais garde un secret plus d'un an.",
+  "Je n'ai jamais raconte une anecdote en la rendant un peu meilleure.",
+  "Je n'ai jamais joue l avocat du diable juste pour debattre.",
+  "Je n'ai jamais envoye un snap ou une story puis supprime.",
+  "Je n'ai jamais regarde qui a vu ma story plusieurs fois.",
+  "Je n'ai jamais mute une conversation de groupe pendant 1 mois.",
+  "Je n'ai jamais ete accro a un filtre photo.",
+  "Je n'ai jamais poste un truc juste pour voir une reaction.",
+  "Je n'ai jamais passe plus de 4h sur mon tel d'affilee.",
+  "Je n'ai jamais menti sur mon niveau de batterie.",
+  "Je n'ai jamais prefere envoyer un vocal plutot qu'ecrire 2 lignes.",
+  "Je n'ai jamais ignore un appel puis envoye desole j'etais sous la douche.",
+  "Je n'ai jamais eu une phase obsession sur une serie.",
+  "Je n'ai jamais binge-watch une serie jusqu'au matin.",
+  "Je n'ai jamais pleure sur une chanson.",
+  "Je n'ai jamais adore un film que tout le monde deteste.",
+  "Je n'ai jamais fait semblant de comprendre la fin d'un film.",
+  "Je n'ai jamais lu des spoilers puis fait comme si je savais rien.",
+  "Je n'ai jamais insiste pour choisir la musique en voiture.",
+  "Je n'ai jamais refuse un plan puis regrette en voyant les stories.",
+  "Je n'ai jamais fait un compliment juste pour detendre l'ambiance.",
+  "Je n'ai jamais eu peur d'envoyer un message trop direct.",
+  "Je n'ai jamais eu une honte instantanee en me rappelant un souvenir.",
+  "Je n'ai jamais prefere dormir plutot que sortir un samedi.",
+  "Je n'ai jamais change de place juste pour etre a cote de quelqu'un.",
+  "Je n'ai jamais ete un peu jaloux ou jalouse d'un pote.",
+  "Je n'ai jamais menti en disant j'ai lu les conditions.",
+  "Je n'ai jamais eu une phase motivation sport de 3 jours.",
+  "Je n'ai jamais oublie un rendez-vous important.",
+  "Je n'ai jamais ecrit un message long puis tout efface.",
+  "Je n'ai jamais eu un fou rire au pire moment possible.",
+  "Je n'ai jamais dit c'est ma derniere soiree de la semaine puis ressorti.",
+  "Je n'ai jamais fait une promesse de regime avant un brunch.",
+  "Je n'ai jamais voulu supprimer mes reseaux pendant 24h.",
+  "Je n'ai jamais fait un caprice pour choisir le resto.",
+  "Je n'ai jamais compare les notes avant de choisir un plat.",
+  "Je n'ai jamais annule une alarme et regrette instantanement.",
+  "Je n'ai jamais eu envie de changer de vie du jour au lendemain.",
+  "Je n'ai jamais passe une commande juste pour les frites.",
+  "Je n'ai jamais laisse un message en vu volontairement.",
+  "Je n'ai jamais donne un conseil que je n'applique pas moi-meme.",
+  "Je n'ai jamais voulu ecrire a quelqu'un puis me suis retenu.",
+  "Je n'ai jamais eu une conversation trop honnete apres minuit.",
+  "Je n'ai jamais joue un role pour plaire a quelqu'un.",
+  "Je n'ai jamais dit ca va alors que pas du tout.",
+  "Je n'ai jamais eu un crush sur une voix.",
+  "Je n'ai jamais ete indecis ou indecise au point d'agacer le groupe.",
+  "Je n'ai jamais fait semblant d'etre sobre pour rentrer tranquille.",
+  "Je n'ai jamais propose une sortie puis finalement annule.",
+  "Je n'ai jamais ete surpris ou surprise de moi-meme en soiree.",
+  "Je n'ai jamais improvise un cadeau a la derniere minute.",
+  "Je n'ai jamais ferme une appli puis rouverte direct par reflexe.",
+  "Je n'ai jamais oublie ce que j'allais dire en plein milieu d'une phrase.",
+];
+
+const JE_NAI_JAMAIS_QUESTIONS = [
+  ...JE_NAI_JAMAIS_BASE_QUESTIONS,
+  ...JE_NAI_JAMAIS_EXTRA_QUESTIONS,
+];
+
 const TOTAL_QUESTIONS = JE_NAI_JAMAIS_QUESTIONS.length;
 
 interface GameState {
@@ -219,16 +362,22 @@ export default function JeNaiJamaisGame({
 
   // Get difficulty level color and label
   const getDifficultyInfo = (index: number) => {
-    if (index < 10) return { color: 'text-green-400', label: 'Soft', bg: 'bg-green-500/10' };
-    if (index < 20) return { color: 'text-blue-400', label: 'Léger', bg: 'bg-blue-500/10' };
-    if (index < 30) return { color: 'text-yellow-400', label: 'Moyen', bg: 'bg-yellow-500/10' };
-    if (index < 40) return { color: 'text-orange-400', label: 'Épicé', bg: 'bg-orange-500/10' };
-    if (index < 50) return { color: 'text-red-400', label: 'Osé', bg: 'bg-red-500/10' };
-    if (index < 60) return { color: 'text-pink-400', label: 'Très Osé', bg: 'bg-pink-500/10' };
-    if (index < 70) return { color: 'text-purple-400', label: 'Très Chaud', bg: 'bg-purple-500/10' };
-    if (index < 80) return { color: 'text-red-600', label: 'Extrême', bg: 'bg-red-600/10' };
-    if (index < 90) return { color: 'text-fuchsia-500', label: 'Sans Filtre', bg: 'bg-fuchsia-500/10' };
-    return { color: 'text-rose-600', label: 'Ultime 🔥', bg: 'bg-rose-600/10' };
+    const levels = [
+      { color: 'text-green-400', label: 'Soft', bg: 'bg-green-500/10' },
+      { color: 'text-blue-400', label: 'Léger', bg: 'bg-blue-500/10' },
+      { color: 'text-yellow-400', label: 'Moyen', bg: 'bg-yellow-500/10' },
+      { color: 'text-orange-400', label: 'Épicé', bg: 'bg-orange-500/10' },
+      { color: 'text-red-400', label: 'Osé', bg: 'bg-red-500/10' },
+      { color: 'text-pink-400', label: 'Très Osé', bg: 'bg-pink-500/10' },
+      { color: 'text-purple-400', label: 'Très Chaud', bg: 'bg-purple-500/10' },
+      { color: 'text-red-600', label: 'Extrême', bg: 'bg-red-600/10' },
+      { color: 'text-fuchsia-500', label: 'Sans Filtre', bg: 'bg-fuchsia-500/10' },
+      { color: 'text-rose-600', label: 'Ultime 🔥', bg: 'bg-rose-600/10' },
+    ];
+
+    const ratio = (index + 1) / TOTAL_QUESTIONS;
+    const levelIndex = Math.min(levels.length - 1, Math.floor(ratio * levels.length));
+    return levels[levelIndex];
   };
 
   const questionsRemaining = TOTAL_QUESTIONS - gameState.askedQuestions.length;
@@ -285,7 +434,7 @@ export default function JeNaiJamaisGame({
               
               {isWarningVisible && (
                 <div className="mt-2 p-2 md:p-3 bg-muted/50 rounded-lg text-[10px] md:text-xs text-muted-foreground space-y-1">
-                  <p>• Les questions progressent par paliers de 10 (Soft → Ultime)</p>
+                  <p>• Les questions progressent du soft vers l ultime sur tout le pool</p>
                   <p>• Respectez les limites de chacun</p>
                   <p>• Ce qui se dit ici reste ici</p>
                   <p>• Vous pouvez passer une question si trop gênante</p>

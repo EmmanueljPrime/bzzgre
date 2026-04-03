@@ -151,7 +151,7 @@ export default function BzzgreGamesModal({
                       Je n'ai jamais...
                     </CardTitle>
                     <CardDescription className="text-xs md:text-sm">
-                      Qui a déjà fait ça ? • 100 questions progressives
+                      Qui a déjà fait ça ? • Grand pool progressif
                     </CardDescription>
                   </div>
                   <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
@@ -161,13 +161,13 @@ export default function BzzgreGamesModal({
               </CardHeader>
               <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                 <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
-                  Le classique "Je n'ai jamais" avec 100 questions qui évoluent de soft à très osé ! 
+                  Le classique "Je n'ai jamais" avec un tres grand nombre de questions qui evoluent de soft a tres ose ! 
                   Ceux qui ont déjà fait l'action boivent. Attention, ça monte en intensité ! 🔥
                 </p>
                 <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
                   <span>👥 Mode groupe</span>
                   <span>•</span>
-                  <span>🎲 100 questions</span>
+                  <span>🎲 Pool XXL</span>
                   <span>•</span>
                   <span>📈 Difficulté progressive</span>
                 </div>
