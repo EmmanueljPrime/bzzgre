@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AppState, Config, Participant, initialAppState, Bar, AVAILABLE_BARS } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import Header from '@/components/Header';
@@ -12,6 +13,7 @@ import BarSelectionModal from '@/components/BarSelectionModal';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
+  const searchParams = useSearchParams();
   const [appState, setAppState, clearAppState, isClient, isStorageHydrated] = useLocalStorage<AppState>(
     'bzzgre-state',
     initialAppState
@@ -48,6 +50,27 @@ export default function Home() {
       }));
     }
   }, [isClient, isStorageHydrated, appState.config.selectedBar]);
+
+  // Permet de forcer un bar depuis l'URL: /?bar=fusion
+  useEffect(() => {
+    if (!isClient || !isStorageHydrated) return;
+
+    const barIdFromUrl = searchParams.get('bar');
+    if (!barIdFromUrl) return;
+
+    const matchedBar = AVAILABLE_BARS.find((bar) => bar.id === barIdFromUrl);
+    if (!matchedBar) return;
+
+    if (appState.config.selectedBar?.id !== matchedBar.id) {
+      setAppState((previousState) => ({
+        ...previousState,
+        config: {
+          ...previousState.config,
+          selectedBar: matchedBar,
+        },
+      }));
+    }
+  }, [isClient, isStorageHydrated, searchParams, appState.config.selectedBar?.id]);
 
 
   // Gestion de la configuration initiale
