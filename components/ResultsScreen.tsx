@@ -37,48 +37,40 @@ export default function ResultsScreen({
   return (
     <div className="min-h-screen p-4 pt-20 pb-8 bg-gradient-to-br from-background to-muted">
       <div className="container max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <p className="text-lg text-muted-foreground">
-            {isDrawn ? 'Relancez pour un nouveau tirage' : 'Prêt pour le tirage'}
-          </p>
-        </div>
-
         {/* Boutons principaux */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 flex items-center justify-center gap-3">
           <Button
             onClick={onDrawDrinks}
             disabled={!canDraw}
-            className="h-12 w-fit min-w-[230px] px-6 mx-auto"
+            className="h-12 w-fit min-w-[230px] px-6"
             size="default"
           >
             <Shuffle className="h-5 w-5" />
             {isDrawn ? 'Relancer le tirage' : 'Tirer les boissons'}
           </Button>
 
-          <div className="flex items-center justify-center gap-3">
-            <Button
-              onClick={() => setIsBzzgreModalOpen(true)}
-              variant="secondary"
-              className="h-14 w-14 p-0 text-white transition-all hover:brightness-110"
-              style={{
-                background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 55%, hsl(var(--accent)) 100%)',
-              }}
-              size="icon"
-              aria-label="Ouvrir les jeux Bzzgre"
-            >
-              <Gamepad2 className="h-6 w-6" />
-            </Button>
+          <Button
+            onClick={() => setIsBzzgreModalOpen(true)}
+            variant="secondary"
+            className="h-12 w-12 p-0 text-white transition-all hover:brightness-110"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 55%, hsl(var(--accent)) 100%)',
+            }}
+            size="icon"
+            aria-label="Ouvrir les jeux Bzzgre"
+          >
+            <Gamepad2 className="h-5 w-5" />
+          </Button>
 
-            <Button
-              onClick={onAddParticipant}
-              variant="secondary"
-              className="h-14 w-14 p-0"
-              size="icon"
-              aria-label="Ajouter un participant"
-            >
-              <UserPlus className="h-6 w-6" />
-            </Button>
-          </div>
+          <Button
+            onClick={onAddParticipant}
+            variant="secondary"
+            className="h-12 w-12 p-0"
+            size="icon"
+            aria-label="Ajouter un participant"
+          >
+            <UserPlus className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Grille de participants */}
