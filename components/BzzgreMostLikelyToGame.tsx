@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ConfirmResetModal from '@/components/ConfirmResetModal';
 import { X, RotateCcw, Sparkles, Users } from 'lucide-react';
 
 interface BzzgreMostLikelyToGameProps {
@@ -88,6 +89,7 @@ export default function BzzgreMostLikelyToGame({
   onClose,
 }: BzzgreMostLikelyToGameProps) {
   const storageKey = `bzzgre_most_likely_to_${gameId}`;
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   const [gameState, setGameState] = useState<GameState>(() => {
     if (typeof window === 'undefined') {
@@ -228,7 +230,7 @@ export default function BzzgreMostLikelyToGame({
               </Button>
 
               <Button
-                onClick={handleReset}
+                onClick={() => setIsResetConfirmOpen(true)}
                 variant="outline"
                 className="h-10 md:h-12 text-sm md:text-base"
                 size="lg"
@@ -243,6 +245,15 @@ export default function BzzgreMostLikelyToGame({
             </Button>
           </CardContent>
         </Card>
+
+        <ConfirmResetModal
+          isOpen={isResetConfirmOpen}
+          onCancel={() => setIsResetConfirmOpen(false)}
+          onConfirm={() => {
+            handleReset();
+            setIsResetConfirmOpen(false);
+          }}
+        />
       </div>
     </div>
   );

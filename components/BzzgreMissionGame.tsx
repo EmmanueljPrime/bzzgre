@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ConfirmResetModal from '@/components/ConfirmResetModal';
 import { X, RotateCcw, Sparkles, Users, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface BzzgreMissionGameProps {
@@ -74,7 +75,8 @@ const MISSION_QUESTIONS = [
   "Balance un dossier sur <PLAYER>. Si tu n'as rien, tu bois 5 gorgées.",
   "Macron veut réarmer la France, pas le choix : tu dois coucher avec un/une participant(e). Répondez tous. Celui ou celle qui est choisi(e) boit 3 gorgées, sauf vous deux. Tais-toi et bois le nombre de gorgées qui n'ont pas été bues, j'espère que vous n'êtes pas trop nombreux.",
   "Ta position préférée ?",
-  "Ton crush actuel ? S'il/elle est dans la pièce, bois et tais-toi, jeune timide."
+  "Ton crush actuel ? S'il/elle est dans la pièce, bois et tais-toi, jeune timide.",
+  "Graig prend le cadeaux et va te changer dans la pièce « rendez-vous ». Tu dois porter cette tenue pour les 5 prochaine minute.",
 ];
 
 const TOTAL_QUESTIONS = MISSION_QUESTIONS.length;
@@ -88,6 +90,7 @@ const GLOBAL_QUESTION_INDEXES = new Set<number>([
   51, // Vote : porte-jarretelles ou body ?
   52, // Vote : sous-vêtements en dentelle sur les hommes ?
   53, // Vote : faire l'amour le premier soir ?
+  61, // Graig prend le cadeaux et va te changer dans la pièce « rendez-vous ».
 ]);
 
 interface PlayerQuestionsState {
@@ -113,6 +116,7 @@ export default function BzzgreMissionGame({
     }
     return true;
   });
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   // Initialize state from localStorage or create fresh state
   const [gameState, setGameState] = useState<GameState>(() => {
@@ -328,7 +332,7 @@ export default function BzzgreMissionGame({
           {/* Action Buttons */}
           <div className="flex gap-2">
             <Button
-              onClick={handleReset}
+              onClick={() => setIsResetConfirmOpen(true)}
               variant="outline"
               size="sm"
               className="flex-1"
@@ -431,6 +435,15 @@ export default function BzzgreMissionGame({
           </div>
         </CardContent>
       </Card>
+
+      <ConfirmResetModal
+        isOpen={isResetConfirmOpen}
+        onCancel={() => setIsResetConfirmOpen(false)}
+        onConfirm={() => {
+          handleReset();
+          setIsResetConfirmOpen(false);
+        }}
+      />
     </div>
   );
 }

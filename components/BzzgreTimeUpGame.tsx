@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ConfirmResetModal from '@/components/ConfirmResetModal';
 import { X, RotateCcw, Play, Pause, Check, ChevronRight, Users, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface BzzgreTimeUpGameProps {
@@ -197,6 +198,7 @@ export default function BzzgreTimeUpGame({
     }
     return true;
   });
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   // État pour le drag and drop
   const [draggedPlayer, setDraggedPlayer] = useState<number | null>(null);
@@ -889,7 +891,7 @@ export default function BzzgreTimeUpGame({
                 </div>
               )}
               <div className="flex gap-2 pt-2 md:pt-4">
-                <Button onClick={resetJeu} className="flex-1" size="sm">
+                <Button onClick={() => setIsResetConfirmOpen(true)} className="flex-1" size="sm">
                   <RotateCcw className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
                   <span className="text-xs md:text-base">Rejouer</span>
                 </Button>
@@ -899,6 +901,15 @@ export default function BzzgreTimeUpGame({
               </div>
             </CardContent>
           </Card>
+
+          <ConfirmResetModal
+            isOpen={isResetConfirmOpen}
+            onCancel={() => setIsResetConfirmOpen(false)}
+            onConfirm={() => {
+              resetJeu();
+              setIsResetConfirmOpen(false);
+            }}
+          />
         </div>
       </div>
     );
@@ -1100,7 +1111,7 @@ export default function BzzgreTimeUpGame({
             )}
 
             <div className="flex gap-2">
-              <Button onClick={resetJeu} variant="outline" className="flex-1">
+              <Button onClick={() => setIsResetConfirmOpen(true)} variant="outline" className="flex-1">
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Reset
               </Button>
@@ -1110,6 +1121,15 @@ export default function BzzgreTimeUpGame({
             </div>
           </CardContent>
         </Card>
+
+        <ConfirmResetModal
+          isOpen={isResetConfirmOpen}
+          onCancel={() => setIsResetConfirmOpen(false)}
+          onConfirm={() => {
+            resetJeu();
+            setIsResetConfirmOpen(false);
+          }}
+        />
       </div>
     </div>
   );

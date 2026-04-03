@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Participant } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ConfirmResetModal from '@/components/ConfirmResetModal';
 import { X, RotateCcw, Sparkles, Users, Flame } from 'lucide-react';
 
 interface BzzgrePalmierGameProps {
@@ -58,6 +59,7 @@ export default function BzzgrePalmierGame({
   onClose,
 }: BzzgrePalmierGameProps) {
   const storageKey = `bzzgre_palmier_game_${gameId}`;
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   const [gameState, setGameState] = useState<PalmierGameState>(() => {
     if (typeof window === 'undefined') {
@@ -227,13 +229,22 @@ export default function BzzgrePalmierGame({
               <Button onClick={drawCard} size="lg" disabled={cardsLeft === 0}>
                 {cardsLeft === 0 ? 'Plus de cartes' : 'Piocher une carte'}
               </Button>
-              <Button onClick={handleReset} variant="outline" size="lg">
+              <Button onClick={() => setIsResetConfirmOpen(true)} variant="outline" size="lg">
                 <RotateCcw className="h-4 w-4" />
                 Reinitialiser Palmier
               </Button>
             </div>
           </CardContent>
         </Card>
+
+        <ConfirmResetModal
+          isOpen={isResetConfirmOpen}
+          onCancel={() => setIsResetConfirmOpen(false)}
+          onConfirm={() => {
+            handleReset();
+            setIsResetConfirmOpen(false);
+          }}
+        />
       </div>
     </div>
   );
