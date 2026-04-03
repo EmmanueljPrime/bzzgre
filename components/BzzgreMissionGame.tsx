@@ -79,6 +79,17 @@ const MISSION_QUESTIONS = [
 
 const TOTAL_QUESTIONS = MISSION_QUESTIONS.length;
 
+// Questions globales (tirables par n'importe qui, puis retirées pour tout le monde)
+const GLOBAL_QUESTION_INDEXES = new Set<number>([
+  24, // Décidez d'une pièce « rendez-vous »
+  31, // Tous ceux qui ont un préservatif...
+  34, // Tour de table...
+  37, // Tous ceux qui ont déjà fait un rêve érotique...
+  51, // Vote : porte-jarretelles ou body ?
+  52, // Vote : sous-vêtements en dentelle sur les hommes ?
+  53, // Vote : faire l'amour le premier soir ?
+]);
+
 interface PlayerQuestionsState {
   [playerId: number]: number[]; // Array of question indexes remaining for this player
 }
@@ -194,16 +205,31 @@ export default function BzzgreMissionGame({
     const randomIndex = Math.floor(Math.random() * availableQuestions.length);
     const questionIndex = availableQuestions[randomIndex];
     const rawQuestion = MISSION_QUESTIONS[questionIndex];
+    const isGlobalQuestion = GLOBAL_QUESTION_INDEXES.has(questionIndex);
     
     // Replace placeholders
     const processedQuestion = replacePlayerPlaceholder(rawQuestion, playerId);
 
-    // Remove this question from the player's available questions
-    const updatedQuestions = availableQuestions.filter((_, idx) => idx !== randomIndex);
-    const updatedPlayerQuestionsLeft = {
-      ...gameState.playerQuestionsLeft,
-      [playerId]: updatedQuestions,
-    };
+    // Remove question from pools:
+    // - globale: retirée pour tous les joueurs
+    // - individuelle: retirée seulement pour le joueur actif
+    let updatedPlayerQuestionsLeft: PlayerQuestionsState;
+
+    if (isGlobalQuestion) {
+      updatedPlayerQuestionsLeft = { ...gameState.playerQuestionsLeft };
+      participants.forEach((participant) => {
+        const participantQuestions = updatedPlayerQuestionsLeft[participant.id] || [];
+        updatedPlayerQuestionsLeft[participant.id] = participantQuestions.filter(
+          (idx) => idx !== questionIndex
+        );
+      });
+    } else {
+      const updatedQuestions = availableQuestions.filter((idx) => idx !== questionIndex);
+      updatedPlayerQuestionsLeft = {
+        ...gameState.playerQuestionsLeft,
+        [playerId]: updatedQuestions,
+      };
+    }
 
     setGameState({
       currentPlayerId: playerId,
