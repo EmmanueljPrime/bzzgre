@@ -1087,7 +1087,7 @@ export default function BzzgreTimeUpGame({
                       size="sm"
                     >
                       <Check className="mr-0.5 md:mr-1 h-4 w-4 md:h-5 md:w-5" />
-                      PASSÉ
+                      VALIDER
                     </Button>
 
                     <Button
