@@ -140,40 +140,42 @@ export default function BzzgreMissionGame({
     }
   }, [gameState, storageKey]);
 
-  // Get random player names (excluding current player), favoring unique picks first
-  const getRandomPlayerNames = (excludeId: number, count: number): string[] => {
+  // Get random players (excluding current player), keeping picks unique as long as possible.
+  const getRandomPlayers = (excludeId: number, count: number): Participant[] => {
     const availablePlayers = participants.filter((p) => p.id !== excludeId);
 
     if (availablePlayers.length === 0) {
-      return Array.from({ length: count }, () => 'un joueur');
+      return [];
     }
 
-    // Shuffle once to get unique players first for repeated placeholders
     const shuffledPlayers = [...availablePlayers].sort(() => Math.random() - 0.5);
-    const selectedNames: string[] = [];
+    const selectedPlayers: Participant[] = [];
 
     for (let i = 0; i < count; i++) {
       if (i < shuffledPlayers.length) {
-        selectedNames.push(shuffledPlayers[i].name);
+        selectedPlayers.push(shuffledPlayers[i]);
       } else {
         const randomPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
-        selectedNames.push(randomPlayer.name);
+        selectedPlayers.push(randomPlayer);
       }
     }
 
-    return selectedNames;
+    return selectedPlayers;
   };
 
-  // Replace <PLAYER> placeholder with actual player names
+  // Replace <PLAYER> placeholders with actual players.
   const replacePlayerPlaceholder = (question: string, currentPlayerId: number): string => {
     let result = question;
     const matches = question.match(/<PLAYER>/g);
     
     if (matches) {
-      const playerNames = getRandomPlayerNames(currentPlayerId, matches.length);
+      const selectedPlayers = getRandomPlayers(currentPlayerId, matches.length);
 
-      playerNames.forEach((playerName) => {
-        result = result.replace('<PLAYER>', playerName);
+      matches.forEach((_, index) => {
+        const player = selectedPlayers[index];
+        const replacement = player ? player.name : 'un joueur';
+
+        result = result.replace('<PLAYER>', replacement);
       });
     }
     
