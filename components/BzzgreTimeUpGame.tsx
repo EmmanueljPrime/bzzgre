@@ -924,7 +924,7 @@ export default function BzzgreTimeUpGame({
             <div className="flex items-start justify-between gap-1 md:gap-2">
               <div className="flex-1">
                 <CardTitle className="text-base md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent">
-                  ⏱️ Time's Up Bzzgre
+                  ⏱️ Chrono BzzGre
                 </CardTitle>
                 <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5 md:mt-1">
                   Tours 1-2: 30s | Tour 3: 40s

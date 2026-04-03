@@ -175,7 +175,7 @@ export default function BzzgreGamesModal({
             </Card>
           </button>
 
-          {/* Time's Up Card */}
+          {/* Chrono BzzGre Card */}
           <button
             onClick={() => setCurrentMode('timesup')}
             className="w-full text-left group"
@@ -186,7 +186,7 @@ export default function BzzgreGamesModal({
                   <div className="space-y-1 md:space-y-2 flex-1">
                     <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
                       <Clock className="h-5 w-5 md:h-6 md:w-6" />
-                      Time's Up
+                      Chrono BzzGre
                     </CardTitle>
                     <CardDescription className="text-xs md:text-sm">
                       Décris, mime et devine • 3 tours • 3 listes
@@ -199,7 +199,7 @@ export default function BzzgreGamesModal({
               </CardHeader>
               <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                 <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
-                  Le classique Time's Up revisité Bzzgre ! 3 listes de 40 mots (Classiques, Séries & Films, Animation). 
+                  Le classique Chrono BzzGre revisité Bzzgre ! 3 listes de 40 mots (Classiques, Séries & Films, Animation). 
                   3 tours : descriptions (30s), un mot (30s), mime (40s). Créez vos équipes par drag & drop ! ⏱️
                 </p>
                 <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
