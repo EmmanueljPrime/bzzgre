@@ -48,8 +48,8 @@ export default function ResultsScreen({
           <Button
             onClick={onDrawDrinks}
             disabled={!canDraw}
-            className="w-full"
-            size="lg"
+            className="w-full max-w-xl mx-auto h-12 text-base"
+            size="default"
           >
             <Shuffle className="h-5 w-5" />
             {isDrawn ? 'Relancer le tirage' : 'Tirer les boissons'}
