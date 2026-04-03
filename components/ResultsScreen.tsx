@@ -48,7 +48,7 @@ export default function ResultsScreen({
           <Button
             onClick={onDrawDrinks}
             disabled={!canDraw}
-            className="w-full max-w-xl mx-auto h-12 text-base"
+            className="h-12 w-fit min-w-[230px] px-6 mx-auto"
             size="default"
           >
             <Shuffle className="h-5 w-5" />
