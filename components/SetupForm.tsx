@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Config, Bar, AVAILABLE_BARS } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,12 @@ export default function SetupForm({ onSubmit, onBarChange, initialConfig }: Setu
     initialConfig?.selectedBar || AVAILABLE_BARS[0]
   );
   const [errors, setErrors] = useState<{ people?: string; drinks?: string }>({});
+
+  // Garde la sélection locale synchronisée avec les changements externes (ex: QR code ?bar=...)
+  useEffect(() => {
+    if (!initialConfig?.selectedBar) return;
+    setSelectedBar(initialConfig.selectedBar);
+  }, [initialConfig?.selectedBar?.id]);
 
   const validate = () => {
     const newErrors: { people?: string; drinks?: string } = {};
