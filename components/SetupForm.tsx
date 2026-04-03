@@ -35,13 +35,18 @@ export default function SetupForm({ onSubmit, onBarChange, initialConfig }: Setu
     const newErrors: { people?: string; drinks?: string } = {};
     const numPeople = parseInt(numberOfPeople);
     const numDrinks = parseInt(drinksPerPerson);
+    const isClassicMode = selectedBar?.id === 'classic';
 
     if (isNaN(numPeople) || numPeople < 1 || numPeople > 20) {
       newErrors.people = 'Le nombre de personnes doit être entre 1 et 20';
     }
 
-    if (isNaN(numDrinks) || numDrinks < 1 || numDrinks > 20) {
-      newErrors.drinks = 'Le nombre de boissons doit être entre 1 et 20';
+    if (isNaN(numDrinks) || numDrinks < 0 || numDrinks > 20) {
+      newErrors.drinks = 'Le nombre de boissons doit être entre 0 et 20';
+    }
+
+    if (!isClassicMode && numDrinks === 0) {
+      newErrors.drinks = 'En mode bar, il faut au moins 1 boisson par personne';
     }
 
     setErrors(newErrors);

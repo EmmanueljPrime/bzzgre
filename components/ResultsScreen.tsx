@@ -10,6 +10,7 @@ import BzzgreGamesModal from './BzzgreGamesModal';
 interface ResultsScreenProps {
   participants: Participant[];
   selectedBar: Bar | null;
+  drinksPerPerson: number;
   onDrawDrinks: () => void;
   onRerollDrink: (participantId: number) => void;
   onEditParticipant: (participantId: number) => void;
@@ -21,6 +22,7 @@ interface ResultsScreenProps {
 export default function ResultsScreen({
   participants,
   selectedBar,
+  drinksPerPerson,
   onDrawDrinks,
   onRerollDrink,
   onEditParticipant,
@@ -29,7 +31,7 @@ export default function ResultsScreen({
   isDrawn,
 }: ResultsScreenProps) {
   const [isBzzgreModalOpen, setIsBzzgreModalOpen] = useState(false);
-  const canDraw = participants.every((p) => p.drinks.length > 0);
+  const canDraw = participants.every((p) => p.drinks.length >= drinksPerPerson);
 
   // Generate a unique game ID based on participant names
   const gameId = participants.map(p => p.id).join('-');

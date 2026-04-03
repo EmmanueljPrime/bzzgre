@@ -304,6 +304,7 @@ export default function Home() {
         <ResultsScreen
           participants={appState.participants}
           selectedBar={appState.config.selectedBar}
+          drinksPerPerson={appState.config.drinksPerPerson}
           onDrawDrinks={handleDrawDrinks}
           onRerollDrink={handleRerollDrinkForParticipant}
           onEditParticipant={handleEditParticipant}
