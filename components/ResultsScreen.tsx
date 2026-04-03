@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shuffle, UserPlus, Edit, Wine, Trash2, Store, Gamepad2 } from 'lucide-react';
+import { Shuffle, UserPlus, Edit, Wine, Trash2, Gamepad2 } from 'lucide-react';
 import BzzgreGamesModal from './BzzgreGamesModal';
 
 interface ResultsScreenProps {
@@ -16,7 +15,6 @@ interface ResultsScreenProps {
   onEditParticipant: (participantId: number) => void;
   onAddParticipant: () => void;
   onDeleteParticipant: (participantId: number) => void;
-  onChangeBar: () => void;
   isDrawn: boolean;
 }
 
@@ -28,7 +26,6 @@ export default function ResultsScreen({
   onEditParticipant,
   onAddParticipant,
   onDeleteParticipant,
-  onChangeBar,
   isDrawn,
 }: ResultsScreenProps) {
   const [isBzzgreModalOpen, setIsBzzgreModalOpen] = useState(false);
@@ -47,65 +44,41 @@ export default function ResultsScreen({
         </div>
 
         {/* Boutons principaux */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="mb-8 space-y-4">
           <Button
             onClick={onDrawDrinks}
             disabled={!canDraw}
-            className="flex-1"
+            className="w-full"
             size="lg"
           >
             <Shuffle className="h-5 w-5" />
             {isDrawn ? 'Relancer le tirage' : 'Tirer les boissons'}
           </Button>
 
-          <Button
-            onClick={() => setIsBzzgreModalOpen(true)}
-            variant="secondary"
-            className="flex-1 md:flex-none text-white transition-all hover:brightness-110"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 55%, hsl(var(--accent)) 100%)',
-            }}
-            size="lg"
-          >
-            <Gamepad2 className="h-5 w-5" />
-            Jeux Bzzgre
-          </Button>
+          <div className="flex items-center justify-center gap-3">
+            <Button
+              onClick={() => setIsBzzgreModalOpen(true)}
+              variant="secondary"
+              className="h-14 w-14 p-0 text-white transition-all hover:brightness-110"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 55%, hsl(var(--accent)) 100%)',
+              }}
+              size="icon"
+              aria-label="Ouvrir les jeux Bzzgre"
+            >
+              <Gamepad2 className="h-6 w-6" />
+            </Button>
 
-          <Button
-            onClick={onAddParticipant}
-            variant="secondary"
-            className="flex-1 md:flex-none"
-            size="lg"
-          >
-            <UserPlus className="h-5 w-5" />
-            Ajouter un participant
-          </Button>
-
-          <Button
-            onClick={onChangeBar}
-            variant="outline"
-            className="flex-1 md:flex-none"
-            size="lg"
-          >
-            {selectedBar?.logo ? (
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-28 relative">
-                  <Image 
-                    src={selectedBar.logo} 
-                    alt={selectedBar.name}
-                    fill
-                    className="object-contain"
-                    style={{ filter: 'brightness(0) saturate(100%) invert(1)' }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <>
-                <Store className="h-5 w-5" />
-                {selectedBar ? selectedBar.name : 'Changer de bar'}
-              </>
-            )}
-          </Button>
+            <Button
+              onClick={onAddParticipant}
+              variant="secondary"
+              className="h-14 w-14 p-0"
+              size="icon"
+              aria-label="Ajouter un participant"
+            >
+              <UserPlus className="h-6 w-6" />
+            </Button>
+          </div>
         </div>
 
         {/* Grille de participants */}

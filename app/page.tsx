@@ -274,7 +274,12 @@ export default function Home() {
 
   return (
     <ThemeProvider bar={appState.config.selectedBar}>
-      <Header onReset={handleNewGame} />
+      <Header
+        onReset={handleNewGame}
+        selectedBar={appState.config.selectedBar}
+        onChangeBar={() => setIsBarSelectionOpen(true)}
+        showBarSwitcher={currentScreen === 'results'}
+      />
 
       {currentScreen === 'setup' && (
         <SetupForm 
@@ -304,7 +309,6 @@ export default function Home() {
           onEditParticipant={handleEditParticipant}
           onAddParticipant={handleAddParticipant}
           onDeleteParticipant={handleDeleteParticipant}
-          onChangeBar={() => setIsBarSelectionOpen(true)}
           isDrawn={appState.isDrawingComplete}
         />
       )}
