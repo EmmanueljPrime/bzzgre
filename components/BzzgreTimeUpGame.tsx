@@ -453,18 +453,18 @@ export default function BzzgreTimeUpGame({
 
   // Tirer un mot
   const tirerMot = () => {
-    const motsDisponibles = MOTS_ACTUELS
-      .map((_, index) => index)
-      .filter(index => !gameState.motsUtilisesCeTour.includes(index));
+    setGameState(prev => {
+      const motsDisponibles = MOTS_ACTUELS
+        .map((_, index) => index)
+        .filter(index => !prev.motsUtilisesCeTour.includes(index));
 
-    if (motsDisponibles.length === 0) {
-      // Tour terminé
-      setGameState(prev => ({ ...prev, tourTermine: true, enPause: true, motActuelIndex: null }));
-      return;
-    }
+      if (motsDisponibles.length === 0) {
+        return { ...prev, tourTermine: true, enPause: true, motActuelIndex: null };
+      }
 
-    const randomIndex = motsDisponibles[Math.floor(Math.random() * motsDisponibles.length)];
-    setGameState(prev => ({ ...prev, motActuelIndex: randomIndex }));
+      const randomIndex = motsDisponibles[Math.floor(Math.random() * motsDisponibles.length)];
+      return { ...prev, motActuelIndex: randomIndex };
+    });
   };
 
   // Démarrer manche
@@ -500,17 +500,25 @@ export default function BzzgreTimeUpGame({
         i === prev.equipeActuelleIndex ? { ...eq, score: eq.score + 1 } : eq
       );
 
+      // Tirer immédiatement le mot suivant depuis le nouvel état pour éviter les doublons
+      // liés aux lectures d'état obsolète entre deux setState.
+      const motsDisponibles = MOTS_ACTUELS
+        .map((_, index) => index)
+        .filter(index => !nouveauxMots.includes(index));
+
+      const prochainMotIndex = tousMotsTrouves || motsDisponibles.length === 0
+        ? null
+        : motsDisponibles[Math.floor(Math.random() * motsDisponibles.length)];
+
       return {
         ...prev,
         equipes: nouvellesEquipes,
         motsUtilisesCeTour: nouveauxMots,
-        motActuelIndex: null,
+        motActuelIndex: prochainMotIndex,
         tourTermine: tousMotsTrouves,
         enPause: tousMotsTrouves,
       };
     });
-
-    setTimeout(tirerMot, 100);
   };
 
   // Skip mot
