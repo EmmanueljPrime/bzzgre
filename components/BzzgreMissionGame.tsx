@@ -77,6 +77,30 @@ const MISSION_QUESTIONS = [
   "Ta position préférée ?",
   "Ton crush actuel ? S'il/elle est dans la pièce, bois et tais-toi, jeune timide.",
   "Graig prend le cadeaux et va te changer dans la pièce « rendez-vous ». Tu dois porter cette tenue pour les 5 prochaine minute.",
+  "Les femmes classent les tenues des hommes, lot de consolation pour le perdant : ditribue 3 gorgées.",
+  "Les hommes classent les tenues des femmes, lot de consolation pour la perdante : distribue 3 gorgées.",
+  "<PLAYER> et <PLAYER> ce retrouve enchainés l'un à l'autre pour les 10 prochaines minutes. (Utilisation d'écharpes et de ceinture, cravates autorisées, menottes fortement conceillées).",
+  "Préparer un bol de friandises écrivez tous les liquides commestibles et différents alcools disponibles, puis à tout à l'heure pour la suite.",
+  "<PLAYER> est une vrai tombe tu dois lui confier un secret si jamais il était déjà au courant, tire 3 papier dans le bol à friandises et confectionne un shooter avec les ingrédients tirés et bonne appétit.",
+  "Donne la date de la personne à ta droite, si tu te trompe une gorgée par jour d'écart, cul sec annule, si tu as bon distribue 3 gorgées.",
+  "Selon tes goûts et uniquement les tiens, annonce deux red flags de <PLAYER>",
+  "Vous connaisez le strip bottle c'est simple : <PLAYER> retire à <PLAYER> un vêtement.",
+  "Allez on va rire imaginé être en couple si vous aviez le droit de tromper votre partenaire une fois vous choisissez qui pour le faire ?",
+  "Tu n'as pas le choix tu dois repeupler la planète, manque de pot pour ca tu dois forcément choisir un/une de tes exs, tu prends qui pour sauver l'humanité ?",
+  "Attention ne lis pas à voix haute : tu dois embrasser <PLAYER> pendant que tout le monde ferme les yeux, puis ils doivent deviner qui était le/la chanceux(se) du jour. puis bois autant de gorgées que le nombre de bonnes réponses.",
+  "Ton plus gros crush passé ou présent ?",
+  "Attention va falloir te servir de ton cerveau si tu en es équipé : fait une partie de chifoumi avec le joueur a sa gauche le perdant retire un vêtement et le gagnant doit embrasser <PLAYER>.",
+  "<PLAYER> dit un mots dans l'oreille de la personne à ta gauche, puis c'est à cette personne de faire de même à la suivante, et ainsi de suite jusqu'à revenir à <PLAYER>. Si le mot est différent du mot de départ, tout le monde boit 3 gorgées.",
+  "Tu lance un dés si t'en as pas, tu demande à Siri ou Google de te donner un chiffre entre 1 et 6, le numéro obtenue correspond au nombre de papier que tu dois tirer dans le bol à friandises pour confectionner un shooter, <PLAYER> devra le boire.",
+  "Au bout de 3, pointé tous du doigt un joueur qui selon vous pourrait faire son coming out et qui ne vous étonnerait pas, 2 gorgées pour votre futur nouvelle star.",
+  "Tu dois passer 1 semaine enfermé dans une prison avec quelqu'un avec lit une personne, toilette ouverte, douche ouverte, aucune intimité, tu choisis qui ?",
+  "Test sportif : fais 10 pompes, si tu échoues, tu bois 5 gorgées, si tu réussis, tu distribues 5 gorgées.",
+  "Test sportif : tien 20 seconde en planche, si tu échoues, tu bois 5 gorgées, si tu réussis, tu distribues 5 gorgées.",
+  "Parmi les participants, choisis une personne du sex opposé avec qui selon toi il ne se passera jamais rien, même si vous avez trop bue.",
+    "Au bout de 3, pointé tous du doigt la personne la plus sexy, 2 gorgées pour votre star. t'avais qu'à être moche",
+
+
+
 ];
 
 const TOTAL_QUESTIONS = MISSION_QUESTIONS.length;

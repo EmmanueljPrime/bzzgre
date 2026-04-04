@@ -28,6 +28,51 @@ export default function BzzgreGamesModal({
   onClose,
 }: BzzgreGamesModalProps) {
   const [currentMode, setCurrentMode] = useState<GameMode>('selection');
+  const [isMissionWarningOpen, setIsMissionWarningOpen] = useState(false);
+
+  const handleMissionGameClick = () => {
+    setIsMissionWarningOpen(true);
+  };
+
+  const handleMissionWarningConfirm = () => {
+    setIsMissionWarningOpen(false);
+    setCurrentMode('mission');
+  };
+
+  const handleMissionWarningCancel = () => {
+    setIsMissionWarningOpen(false);
+  };
+
+  if (isMissionWarningOpen) {
+    return (
+      <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-2xl border-2 border-amber-500/40">
+          <CardHeader className="space-y-2">
+            <CardTitle className="text-xl md:text-2xl font-bold flex items-center gap-2 text-amber-700 dark:text-amber-300">
+              <span>⚠️</span>
+              Mission Game
+            </CardTitle>
+            <CardDescription className="text-sm md:text-base">
+              Attention, ce jeu n'est pas adapté aux bars. Il est préférable d'y jouer lors d'une soirée à domicile, entre personnes à l'aise avec ce type de questions.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-xs md:text-sm text-muted-foreground">
+              Gardez le cadre cool, respectez les limites de chacun, et évitez de le lancer dans un lieu trop public.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <Button onClick={handleMissionWarningCancel} variant="outline">
+                Annuler
+              </Button>
+              <Button onClick={handleMissionWarningConfirm}>
+                J'ai compris
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (currentMode === 'mission') {
     return (
@@ -120,7 +165,7 @@ export default function BzzgreGamesModal({
 
           {/* Mission Game Card */}
           <button
-            onClick={() => setCurrentMode('mission')}
+            onClick={handleMissionGameClick}
             className="w-full text-left group"
           >
             <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
