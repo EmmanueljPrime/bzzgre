@@ -1,73 +1,122 @@
-# BzzGre 🍻
+# BzzGre
 
-Application web de tirage aléatoire de boissons pour soirées entre amis.
+BzzGre est une application Next.js de soirée pensée pour gérer une partie complète en local, sans base de données. L'app combine un tirage de boissons, des jeux d'ambiance, et plusieurs modes persistants qui restent disponibles même si on change d'écran ou de jeu pendant la soirée.
 
-## Fonctionnalités
+## Ce que fait l'app
 
-- **Configuration personnalisée** : Définissez le nombre de participants et de boissons par personne (1-20)
-- **Saisie séquentielle** : Chaque personne entre son nom et ses boissons
-- **Tirage aléatoire** : Distribution aléatoire des boissons entre tous les participants
-- **Relance illimitée** : Relancez le tirage autant de fois que vous voulez
-- **Modification facile** : Modifiez les participants et leurs boissons sans recréer une partie
-- **Persistance locale** : Les données sont sauvegardées dans le navigateur (localStorage)
+- Création d'une partie avec nombre de personnes et nombre de boissons par personne.
+- Saisie des participants et de leurs boissons.
+- Tirage aléatoire des boissons, avec possibilité de relance et de modification.
+- Catalogue de jeux de soirée accessible depuis un sélecteur central.
+- Sauvegarde complète dans `localStorage`.
+- Pages légales intégrées: CGU, confidentialité et mentions légales.
+- Routes publiques et privées déjà prévues pour les écrans de support.
 
-## Installation
+## Jeux disponibles
 
-1. Installez les dépendances :
-```bash
-npm install
-```
+- Mission Game
+- Missions secrètes
+- Je n'ai jamais...
+- Chrono BzzGre
+- Palmier
+- Most Likely To
+- Imposteur
 
-2. Lancez le serveur de développement :
-```bash
-npm run dev
-```
+## Détail des jeux
 
-3. Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+- Mission Game: deck de questions par joueur, avec questions globales, questions individuelles et sauvegarde locale.
+- Missions secrètes: mission personnelle attribuée à chaque joueur, statut actif / en attente / validé / refusé, validation de groupe et récompense en gorgées.
+- Je n'ai jamais...: grand pool progressif de questions, sauvegarde de l'avancement.
+- Chrono BzzGre: jeu en équipes avec mots à faire deviner en plusieurs tours.
+- Palmier: mini-jeu rapide à base de cartes/règles d'ambiance.
+- Most Likely To: vote de groupe, la personne désignée boit.
+- Imposteur: jeu de bluff avec mot civil, mot imposteur et variante Mr White.
 
-## Comment jouer
+## Fonctionnalités clés
 
-1. **Configuration** : Entrez le nombre de personnes et de boissons par personne
-2. **Saisie** : Chaque participant entre son nom et ses boissons (passez le téléphone)
-3. **Tirage** : Cliquez sur "Tirer les boissons" pour l'attribution aléatoire
-4. **Relance** : Cliquez à nouveau pour relancer avec de nouvelles attributions
-5. **Modification** : Utilisez "Modifier les participants" pour éditer les données
-6. **Nouvelle partie** : Cliquez sur "Nouvelle partie" pour tout recommencer
+- Interface mobile-first.
+- Gestion locale uniquement, sans backend.
+- Reprise automatique des parties grâce au stockage navigateur.
+- Réinitialisation ciblée d'un jeu sans toucher au reste de la soirée.
+- Interface simple, pensée pour être utilisée rapidement en groupe.
 
-## Technologies
+## Stack technique
 
-- Next.js 15 (App Router)
+- Next.js 15 avec App Router
 - React 18
 - TypeScript
 - Tailwind CSS
+- lucide-react pour les icônes
 - localStorage pour la persistance
+
+## Installation
+
+```bash
+npm install
+npm run dev
+```
+
+Ouvre ensuite [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm start
+npm run lint
+```
 
 ## Structure du projet
 
 ```
-BzzGre/
-├── app/
-│   ├── page.tsx          # Composant principal avec logique d'état
-│   ├── layout.tsx        # Layout principal
-│   └── globals.css       # Styles globaux
-├── components/
-│   ├── SetupForm.tsx          # Écran de configuration
-│   ├── ParticipantEntry.tsx   # Saisie des participants
-│   └── ResultsScreen.tsx      # Écran de résultats/tirage
-├── hooks/
-│   └── useLocalStorage.ts     # Hook de persistance
-└── types/
-    └── index.ts               # Types TypeScript
+app/
+├── page.tsx
+├── layout.tsx
+├── globals.css
+├── cgu/page.tsx
+├── confidentialite/page.tsx
+├── mentions-legales/page.tsx
+└── qr-codes-bzzgre-private/page.tsx
+
+components/
+├── BzzgreGamesModal.tsx
+├── BzzgreMissionGame.tsx
+├── BzzgreSecretMissionsGame.tsx
+├── BzzgreMostLikelyToGame.tsx
+├── BzzgreTimeUpGame.tsx
+├── BzzgrePalmierGame.tsx
+├── BzzgreImposteurGame.tsx
+├── JeNaiJamaisGame.tsx
+├── SetupForm.tsx
+├── ParticipantEntry.tsx
+├── ResultsScreen.tsx
+├── EditParticipantModal.tsx
+├── ConfirmResetModal.tsx
+├── Header.tsx
+├── LegalFooter.tsx
+└── ThemeProvider.tsx
+
+hooks/
+└── useLocalStorage.ts
+
+lib/
+└── utils.ts
+
+types/
+└── index.ts
 ```
 
-## Build pour production
+## Stockage local
 
-```bash
-npm run build
-npm start
-```
+Les données de la soirée sont enregistrées dans le navigateur via `localStorage`. Chaque jeu persistant utilise sa propre clé, ce qui permet de quitter un jeu, changer de mode, puis revenir plus tard sans perdre la progression.
+
+## Notes de fonctionnement
+
+- L'application reste entièrement locale.
+- Les jeux conservent leur état entre les ouvertures de modal.
+- Certaines cartes sont marquées comme plus adaptées à une soirée à domicile qu'à un lieu public.
 
 ## Licence
 
 MIT
-# bzzgre
