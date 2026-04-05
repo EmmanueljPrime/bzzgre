@@ -5,7 +5,8 @@ import { Participant, Bar } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Target, Beer, Clock, Trees, Users } from 'lucide-react';
-import BzzgreMissionGame from './BzzgreMissionGame';
+import BzzgreMissionGame, { MISSION_TOTAL_QUESTIONS } from './BzzgreMissionGame';
+import BzzgreSecretMissionsGame from './BzzgreSecretMissionsGame';
 import JeNaiJamaisGame from './JeNaiJamaisGame';
 import BzzgreTimeUpGame from './BzzgreTimeUpGame';
 import BzzgrePalmierGame from './BzzgrePalmierGame';
@@ -19,7 +20,7 @@ interface BzzgreGamesModalProps {
   onClose: () => void;
 }
 
-type GameMode = 'selection' | 'mission' | 'jamais' | 'timesup' | 'palmier' | 'likely' | 'imposteur';
+type GameMode = 'selection' | 'mission' | 'secretmissions' | 'jamais' | 'timesup' | 'palmier' | 'likely' | 'imposteur';
 
 export default function BzzgreGamesModal({
   participants,
@@ -41,6 +42,10 @@ export default function BzzgreGamesModal({
 
   const handleMissionWarningCancel = () => {
     setIsMissionWarningOpen(false);
+  };
+
+  const handleSecretMissionsClick = () => {
+    setCurrentMode('secretmissions');
   };
 
   if (isMissionWarningOpen) {
@@ -77,6 +82,16 @@ export default function BzzgreGamesModal({
   if (currentMode === 'mission') {
     return (
       <BzzgreMissionGame
+        participants={participants}
+        gameId={gameId}
+        onClose={() => setCurrentMode('selection')}
+      />
+    );
+  }
+
+  if (currentMode === 'secretmissions') {
+    return (
+      <BzzgreSecretMissionsGame
         participants={participants}
         gameId={gameId}
         onClose={() => setCurrentMode('selection')}
@@ -177,7 +192,7 @@ export default function BzzgreGamesModal({
                       Mission Game
                     </CardTitle>
                     <CardDescription className="text-xs md:text-sm">
-                      Vérités et actions osées • 55 questions par joueur
+                      Vérités et actions osées • {MISSION_TOTAL_QUESTIONS} questions par joueur
                     </CardDescription>
                   </div>
                   <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
@@ -188,12 +203,86 @@ export default function BzzgreGamesModal({
               <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
                 <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
                   Un jeu de vérités et d'actions qui va révéler les secrets les plus croustillants. 
-                  Chaque joueur a son propre deck de 61 questions uniques. Attention, ça va chauffer ! 🔥
+                  Chaque joueur a son propre deck de {MISSION_TOTAL_QUESTIONS} questions uniques. Attention, ça va chauffer ! 🔥
                 </p>
                 <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
                   <span>👥 {participants.length} joueurs</span>
                   <span>•</span>
-                  <span>📝 {participants.length * 61} questions</span>
+                  <span>📝 {participants.length * MISSION_TOTAL_QUESTIONS} questions</span>
+                </div>
+              </CardContent>
+            </Card>
+          </button>
+
+          {/* Secret Missions Card */}
+          <button
+            onClick={handleSecretMissionsClick}
+            className="w-full text-left group"
+          >
+            <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 md:space-y-2 flex-1">
+                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
+                      <Users className="h-5 w-5 md:h-6 md:w-6" />
+                      Missions secrètes
+                    </CardTitle>
+                    <CardDescription className="text-xs md:text-sm">
+                      1 mission par joueur • validation de groupe • sauvegarde locale
+                    </CardDescription>
+                  </div>
+                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
+                    DISPO
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
+                  Chaque joueur reçoit une mission discrète a garder pour lui. Quand quelqu’un pense l’avoir reussie, le groupe valide, refuse ou attribue une recompense a un autre joueur.
+                </p>
+                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
+                  <span>👥 {participants.length} joueurs</span>
+                  <span>•</span>
+                  <span>🗝️ Missions personnelles</span>
+                  <span>•</span>
+                  <span>🍺 Récompense en gorgées</span>
+                </div>
+              </CardContent>
+            </Card>
+          </button>
+
+          {/* Most Likely To Card */}
+          <button
+            onClick={() => setCurrentMode('likely')}
+            className="w-full text-left group"
+          >
+            <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 md:space-y-2 flex-1">
+                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
+                      <Users className="h-5 w-5 md:h-6 md:w-6" />
+                      Most Likely To
+                    </CardTitle>
+                    <CardDescription className="text-xs md:text-sm">
+                      Vote de groupe • la personne désignée boit
+                    </CardDescription>
+                  </div>
+                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
+                    DISPO
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
+                  Tirez une phrase, tout le monde vote, et la personne désignée boit. Rapide, drôle et parfait pour faire monter la soirée.
+                </p>
+                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
+                  <span>🗳️ Vote instantané</span>
+                  <span>•</span>
+                  <span>🍺 Le désigné boit</span>
+                  <span>•</span>
+                  <span>🎯 60 prompts</span>
                 </div>
               </CardContent>
             </Card>
@@ -312,42 +401,6 @@ export default function BzzgreGamesModal({
                   <span>⏱️ 30s/30s/40s</span>
                   <span>•</span>
                   <span>🎯 3 listes de 40 mots</span>
-                </div>
-              </CardContent>
-            </Card>
-          </button>
-
-          {/* Most Likely To Card */}
-          <button
-            onClick={() => setCurrentMode('likely')}
-            className="w-full text-left group"
-          >
-            <Card className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
-              <CardHeader className="p-4 md:p-6">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-1 md:space-y-2 flex-1">
-                    <CardTitle className="text-lg md:text-2xl flex items-center gap-2 group-hover:text-primary transition-colors">
-                      <Users className="h-5 w-5 md:h-6 md:w-6" />
-                      Most Likely To
-                    </CardTitle>
-                    <CardDescription className="text-xs md:text-sm">
-                      Vote de groupe • Qui est le plus susceptible de...
-                    </CardDescription>
-                  </div>
-                  <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
-                    DISPO
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
-                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 hidden md:block">
-                  Tirez une phrase, tout le monde vote, et le joueur designe boit.
-                  Rapide, drole et parfait pour chauffer la table.
-                </p>
-                <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
-                  <span>🗳️ Vote instantane</span>
-                  <span>•</span>
-                  <span>🎯 60 prompts</span>
                 </div>
               </CardContent>
             </Card>

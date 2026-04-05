@@ -103,7 +103,8 @@ const MISSION_QUESTIONS = [
 
 ];
 
-const TOTAL_QUESTIONS = MISSION_QUESTIONS.length;
+export const MISSION_TOTAL_QUESTIONS = MISSION_QUESTIONS.length;
+const TOTAL_QUESTIONS = MISSION_TOTAL_QUESTIONS;
 
 // Questions globales (tirables par n'importe qui, puis retirées pour tout le monde)
 const GLOBAL_QUESTION_INDEXES = new Set<number>([
@@ -127,6 +128,50 @@ interface GameState {
   playerQuestionsLeft: PlayerQuestionsState;
 }
 
+const createFreshPlayerQuestionsLeft = (participants: Participant[]): PlayerQuestionsState => {
+  const playerQuestionsLeft: PlayerQuestionsState = {};
+
+  participants.forEach((participant) => {
+    playerQuestionsLeft[participant.id] = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => i);
+  });
+
+  return playerQuestionsLeft;
+};
+
+const createFreshGameState = (participants: Participant[]): GameState => ({
+  currentPlayerId: null,
+  currentQuestion: null,
+  playerQuestionsLeft: createFreshPlayerQuestionsLeft(participants),
+});
+
+const isCompatibleSavedGameState = (
+  savedState: unknown,
+  participants: Participant[]
+): savedState is GameState => {
+  if (!savedState || typeof savedState !== 'object') {
+    return false;
+  }
+
+  const state = savedState as Partial<GameState>;
+
+  if (!state.playerQuestionsLeft || typeof state.playerQuestionsLeft !== 'object') {
+    return false;
+  }
+
+  if (state.currentPlayerId !== null && state.currentPlayerId !== undefined) {
+    const hasCurrentPlayer = participants.some((participant) => participant.id === state.currentPlayerId);
+    if (!hasCurrentPlayer) {
+      return false;
+    }
+  }
+
+  return participants.every((participant) => {
+    const playerQuestions = state.playerQuestionsLeft?.[participant.id];
+
+    return Array.isArray(playerQuestions) && playerQuestions.length === TOTAL_QUESTIONS;
+  });
+};
+
 export default function BzzgreMissionGame({
   participants,
   gameId,
@@ -144,32 +189,22 @@ export default function BzzgreMissionGame({
 
   // Initialize state from localStorage or create fresh state
   const [gameState, setGameState] = useState<GameState>(() => {
-    if (typeof window === 'undefined') return {
-      currentPlayerId: null,
-      currentQuestion: null,
-      playerQuestionsLeft: {},
-    };
+    if (typeof window === 'undefined') return createFreshGameState(participants);
 
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsedSavedState = JSON.parse(saved);
+
+        if (isCompatibleSavedGameState(parsedSavedState, participants)) {
+          return parsedSavedState;
+        }
       } catch (e) {
         console.error('Failed to parse saved game state:', e);
       }
     }
 
-    // Initialize with all questions for each player
-    const playerQuestionsLeft: PlayerQuestionsState = {};
-    participants.forEach((p) => {
-      playerQuestionsLeft[p.id] = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => i);
-    });
-
-    return {
-      currentPlayerId: null,
-      currentQuestion: null,
-      playerQuestionsLeft,
-    };
+    return createFreshGameState(participants);
   });
 
   // Save state to localStorage whenever it changes
@@ -270,16 +305,7 @@ export default function BzzgreMissionGame({
 
   // Reset game for all players
   const handleReset = () => {
-    const playerQuestionsLeft: PlayerQuestionsState = {};
-    participants.forEach((p) => {
-      playerQuestionsLeft[p.id] = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => i);
-    });
-
-    setGameState({
-      currentPlayerId: null,
-      currentQuestion: null,
-      playerQuestionsLeft,
-    });
+    setGameState(createFreshGameState(participants));
   };
 
   // Get remaining questions count for a player

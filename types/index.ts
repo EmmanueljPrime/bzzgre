@@ -5,6 +5,57 @@ export type Participant = {
   assignedDrink: string | null;
 };
 
+export type SecretMissionStatus = 'active' | 'pending' | 'validated' | 'refused';
+
+export type SecretMissionTemplate = {
+  id: string;
+  text: string;
+  rewardDrinks: number;
+};
+
+export type SecretMissionAssignment = {
+  id: string;
+  templateId: string;
+  text: string;
+  status: SecretMissionStatus;
+  assignedAt: string;
+  assignedOrder: number;
+  requestedAt: string | null;
+  resolvedAt: string | null;
+  rewardTargetId: number | null;
+  rewardTargetName: string | null;
+  rewardDrinks: number;
+};
+
+export type SecretMissionPlayerState = {
+  mission: SecretMissionAssignment | null;
+  successCount: number;
+};
+
+export type SecretMissionHistoryEntry = {
+  id: string;
+  playerId: number;
+  playerName: string;
+  missionText: string;
+  status: 'validated' | 'refused';
+  assignedAt: string;
+  resolvedAt: string;
+  order: number;
+  rewardTargetId: number | null;
+  rewardTargetName: string | null;
+  rewardDrinks: number;
+};
+
+export type SecretMissionsGameState = {
+  version: number;
+  autoAssignNextMission: boolean;
+  nextAssignmentOrder: number;
+  players: Record<number, SecretMissionPlayerState>;
+  history: SecretMissionHistoryEntry[];
+  totalValidatedMissions: number;
+  totalDistributedDrinks: number;
+};
+
 export type BarTheme = {
   primary: string; // Couleur principale
   secondary: string; // Couleur secondaire

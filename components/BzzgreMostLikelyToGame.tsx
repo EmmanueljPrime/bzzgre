@@ -266,7 +266,7 @@ export default function BzzgreMostLikelyToGame({
                   Most Likely To
                 </CardTitle>
                 <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                  Votez tous: qui correspond le plus a la phrase ?
+                  Votez tous: qui correspond le plus a la phrase ? La personne désignée boit.
                 </p>
               </div>
               <Button onClick={onClose} variant="ghost" size="icon" className="shrink-0">
@@ -298,7 +298,7 @@ export default function BzzgreMostLikelyToGame({
                   </p>
                   <div className="pt-2 border-t border-border">
                     <p className="text-[10px] md:text-xs text-muted-foreground italic text-center">
-                      Le joueur avec le plus de votes boit 3 gorgees. En cas d egalite, les ex aequo boivent 2 gorgees.
+                        Le joueur avec le plus de votes boit 3 gorgees. En cas d egalite, les ex aequo boivent 2 gorgees.
                     </p>
                   </div>
                 </CardContent>
